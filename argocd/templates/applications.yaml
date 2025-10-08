@@ -20,12 +20,12 @@ spec:
     {{- . | toYaml | nindent 4 }}
     {{- end }}
   syncPolicy:
-  automated:
-    prune: true
-    selfHeal: true
-  syncOptions:
-    - CreateNamespace=true
-    - Validate=true
-    - ApplyOutOfSyncOnly=true
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - Validate=true
+      - ApplyOutOfSyncOnly=true
 ---
 {{ end -}}
