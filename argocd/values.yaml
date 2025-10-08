@@ -25,3 +25,9 @@ applications:
     tool:
       helm:
         releaseName: content-postgres
+  - name: redis
+    namespace: belovr-infra
+    path: infra/redis
+    tool:
+      helm:
+        releaseName: redis

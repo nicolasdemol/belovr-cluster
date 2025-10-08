@@ -3,7 +3,7 @@ global:
     auth:
       username: chat
       password: chatpass123
-      database: chatdb
+      database: chat
 
 primary:
   persistence:

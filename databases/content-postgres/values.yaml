@@ -3,7 +3,7 @@ global:
     auth:
       username: content
       password: contentpass123
-      database: contentdb
+      database: content
 
 primary:
   persistence:

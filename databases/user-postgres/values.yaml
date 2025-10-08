@@ -3,7 +3,7 @@ global:
     auth:
       username: user
       password: userpass123
-      database: userdb
+      database: user
 
 primary:
   persistence:
