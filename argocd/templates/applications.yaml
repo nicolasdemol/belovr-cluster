@@ -13,7 +13,7 @@ spec:
     server: {{ $config.spec.destination.server | quote }}
   project: default
   source:
-    path: {{ .path | default .name | quote }}
+    path: {{ .path }}
     repoURL: {{ $config.spec.source.repoURL }}
     targetRevision: {{ $config.spec.source.targetRevision }}
     {{- with .tool }}

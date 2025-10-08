@@ -9,16 +9,19 @@ config:
 applications:
   - name: user-postgres
     namespace: belovr-db
+    path: databases/user-postgres
     tool:
       helm:
         releaseName: user-postgres
   - name: chat-postgres
     namespace: belovr-db
+    path: databases/chat-postgres
     tool:
       helm:
         releaseName: chat-postgres
   - name: content-postgres
     namespace: belovr-db
+    path: databases/content-postgres
     tool:
       helm:
         releaseName: content-postgres
