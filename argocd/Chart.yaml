@@ -1,6 +1,0 @@
-apiVersion: v2
-name: applications
-version: 0.1.0
-description: Manage ArgoCD applications declaratively
-type: application
-appVersion: "1.0"
