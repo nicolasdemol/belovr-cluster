@@ -1,0 +1,12 @@
+global:
+  postgresql:
+    auth:
+      username: content
+      password: contentpass123
+      database: contentdb
+
+primary:
+  persistence:
+    enabled: true
+    size: 2Gi
+    storageClass: microk8s-hostpath

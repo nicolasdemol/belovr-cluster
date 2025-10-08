@@ -1,0 +1,12 @@
+global:
+  postgresql:
+    auth:
+      username: chat
+      password: chatpass123
+      database: chatdb
+
+primary:
+  persistence:
+    enabled: true
+    size: 2Gi
+    storageClass: microk8s-hostpath
