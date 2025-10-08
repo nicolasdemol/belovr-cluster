@@ -10,7 +10,3 @@ primary:
     enabled: true
     size: 2Gi
     storageClass: microk8s-hostpath
-
-service:
-  type: ClusterIP
-  port: 5432
