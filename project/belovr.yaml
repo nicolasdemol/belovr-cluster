@@ -14,17 +14,13 @@ spec:
   # Clusters et namespaces autorisés
   destinations:
     - namespace: belovr-*
-      server: https://kubernetes.default.svc
+      server: "*"
 
   # Politique de synchronisation par défaut
   syncWindows: []
   clusterResourceWhitelist:
     - group: "*"
       kind: "*"
-
-  # Active la suppression automatique, self-heal, etc.
-  orphanedResources:
-    warn: false
 
   # Donne les permissions à toutes les apps enfants
   roles:

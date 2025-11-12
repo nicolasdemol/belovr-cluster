@@ -5,23 +5,10 @@ metadata:
   namespace: argocd
 spec:
   project: belovr
+  source:
+    path: .
+    repoURL: oci://registry-1.docker.io/bitnamicharts/postgresql
+    targetRevision: "18.1.8"
   destination:
     server: https://kubernetes.default.svc
     namespace: belovr-db
-  sources:
-    - repoURL: https://github.com/nicolasdemol/belovr-cluster.git
-      path: databases/chat-postgres
-      targetRevision: main
-      ref: values
-    - repoURL: registry-1.docker.io/bitnamicharts
-      chart: postgresql
-      targetRevision: "18.0.8"
-      helm:
-        valueFiles:
-          - $values/databases/chat-postgres/values.yaml
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true

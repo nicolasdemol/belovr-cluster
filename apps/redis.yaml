@@ -5,23 +5,10 @@ metadata:
   namespace: argocd
 spec:
   project: belovr
+  source:
+    path: .
+    repoURL: oci://registry-1.docker.io/bitnamicharts/redis
+    targetRevision: "23.1.1"
   destination:
     server: https://kubernetes.default.svc
     namespace: belovr-infra
-  sources:
-    - repoURL: https://github.com/nicolasdemol/belovr-cluster.git
-      path: infra/redis
-      targetRevision: main
-      ref: values
-    - repoURL: registry-1.docker.io/bitnamicharts
-      chart: redis
-      targetRevision: "23.1.1"
-      helm:
-        valueFiles:
-          - $values/infra/redis/values.yaml
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
