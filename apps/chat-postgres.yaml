@@ -5,10 +5,32 @@ metadata:
   namespace: argocd
 spec:
   project: belovr
+
   source:
-    path: .
     repoURL: oci://registry-1.docker.io/bitnamicharts/postgresql
     targetRevision: "18.1.8"
+    path: .
+    helm:
+      valuesObject:
+        global:
+          postgresql:
+            auth:
+              username: chat
+              password: chatpass123
+              database: chat
+        primary:
+          persistence:
+            enabled: true
+            size: 2Gi
+            storageClass: microk8s-hostpath
+
   destination:
     server: https://kubernetes.default.svc
     namespace: belovr-db
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

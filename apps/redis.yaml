@@ -5,10 +5,12 @@ metadata:
   namespace: argocd
 spec:
   project: belovr
+
   source:
     path: .
     repoURL: oci://registry-1.docker.io/bitnamicharts/redis
     targetRevision: "23.1.1"
+
   destination:
     server: https://kubernetes.default.svc
     namespace: belovr-infra

@@ -14,7 +14,7 @@ spec:
   # Clusters et namespaces autorisés
   destinations:
     - namespace: belovr-*
-      server: "*"
+      server: https://kubernetes.default.svc
 
   # Politique de synchronisation par défaut
   syncWindows: []
