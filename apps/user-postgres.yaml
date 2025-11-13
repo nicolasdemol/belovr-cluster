@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: chat-postgres
+  name: user-postgres
   namespace: argocd
 spec:
   project: belovr
@@ -13,9 +13,9 @@ spec:
     helm:
       valuesObject:
         auth:
-          username: chat
-          password: chatpass
-          database: chat
+          username: user
+          password: userpass
+          database: user
         primary:
           persistence:
             enabled: true

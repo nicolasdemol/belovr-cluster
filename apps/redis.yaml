@@ -15,7 +15,7 @@ spec:
         architecture: standalone
         auth:
           enabled: true
-          password: redispass123
+          password: redispass
         master:
           persistence:
             enabled: true
