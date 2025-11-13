@@ -14,8 +14,8 @@ spec:
       valuesObject:
         image:
           registry: docker.io
-          repository: bitnami/keycloak
-          tag: latest
+          repository: keycloak/keycloak
+          tag: 26.4
 
         auth:
           adminUser: admin
@@ -25,8 +25,8 @@ spec:
           enabled: true
           image:
             registry: docker.io
-            repository: bitnami/postgresql
-            tag: latest
+            repository: postgres
+            tag: 17.6
           auth:
             username: keycloak
             password: keycloakpass
