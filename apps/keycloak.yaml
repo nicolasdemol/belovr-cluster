@@ -19,9 +19,9 @@ spec:
           enabled: true
 
           image:
-          registry: docker.io
-          repository: bitnami/postgresql
-          tag: latest
+            registry: docker.io
+            repository: bitnami/postgresql
+            tag: latest
 
           auth:
             username: keycloak
