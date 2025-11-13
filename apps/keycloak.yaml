@@ -14,8 +14,8 @@ spec:
       valuesObject:
         image:
           registry: docker.io
-          repository: keycloak/keycloak
-          tag: 26.4
+          repository: bitnamisecure/keycloak
+          tag: sha256:29dfd578eb393db0b540edcb0717900ee6483ea0c9f56db9e2039436cadd8598
 
         auth:
           adminUser: admin
@@ -25,8 +25,8 @@ spec:
           enabled: true
           image:
             registry: docker.io
-            repository: postgres
-            tag: sha256:00bc86618629af00d2937fdc5a5d63db3ff8450acf52f0636ec813c7f4902929
+            repository: bitnamisecure/postgresql
+            tag: sha256:14aa30df4c41d43590a0ae59b1963522f5e4344bedda67e1f2e423ea8267c115
           auth:
             username: keycloak
             password: keycloakpass
