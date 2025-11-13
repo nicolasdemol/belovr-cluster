@@ -17,9 +17,9 @@ spec:
             allowInsecureImages: true
 
         image:
-          registry: registry-1.docker.io
-          repository: bitnamisecure/keycloak
-          digest: "sha256:29dfd578eb393db0b540edcb0717900ee6483ea0c9f56db9e2039436cadd8598"
+          registry: docker.io
+          repository: keycloak/keycloak
+          digest: "sha256:653852bfdea2be6e958b9e90a976eff1c6de34edd55f2f679bdc48ef16bc528e"
 
         auth:
           adminUser: admin
