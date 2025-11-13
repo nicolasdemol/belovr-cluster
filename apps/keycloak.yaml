@@ -8,25 +8,25 @@ spec:
 
   source:
     repoURL: oci://registry-1.docker.io/bitnamicharts/keycloak
-    targetRevision: "25.2.0"
+    targetRevision: "25.1.2"
     path: .
     helm:
       valuesObject:
         image:
           registry: docker.io
           repository: keycloak/keycloak
-          tag: 26.4
+          tag: 26.4.0
 
         auth:
           adminUser: admin
           adminPassword: "adminpass"
-        
+
         postgresql:
           enabled: true
           image:
             registry: docker.io
             repository: postgres
-            tag: 17.6
+            tag: 17.6.0
           auth:
             username: keycloak
             password: keycloakpass
