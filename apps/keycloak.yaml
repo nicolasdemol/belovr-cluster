@@ -14,7 +14,7 @@ spec:
       valuesObject:
         global:
           security:
-            allowImmutableImages: true
+            allowInsecureImages: true
 
         image:
           registry: registry-1.docker.io
