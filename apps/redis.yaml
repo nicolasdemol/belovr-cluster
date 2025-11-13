@@ -7,10 +7,23 @@ spec:
   project: belovr
 
   source:
-    path: .
     repoURL: oci://registry-1.docker.io/bitnamicharts/redis
-    targetRevision: "23.1.1"
+    targetRevision: "23.2.12"
+    path: .
+    helm:
+      valuesObject:
+        architecture: standalone
+        auth:
+          enabled: true
+          password: redispass123
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: belovr
+    namespace: belovr-preprod
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
