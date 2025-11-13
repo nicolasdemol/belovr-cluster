@@ -12,10 +12,9 @@ spec:
     path: .
     helm:
       valuesObject:
-        # --- Configuration de base ---
         auth:
           adminUser: admin
-          adminPassword: adminpass # ⚠️ tu pourras remplacer par un Secret ensuite
+          adminPassword: adminpass
         production: false
 
         # --- Persistance ---
@@ -29,14 +28,6 @@ spec:
             persistence:
               enabled: true
               size: 2Gi
-
-        # --- Réseau ---
-        service:
-          type: ClusterIP
-
-        # --- Ingress (optionnel) ---
-        ingress:
-          enabled: false
 
   destination:
     server: https://kubernetes.default.svc
