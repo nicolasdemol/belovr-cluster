@@ -13,4 +13,4 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: belovr-infra
+    namespace: belovr

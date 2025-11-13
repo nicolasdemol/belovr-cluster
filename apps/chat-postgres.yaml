@@ -12,12 +12,10 @@ spec:
     path: .
     helm:
       valuesObject:
-        global:
-          postgresql:
-            auth:
-              username: chat
-              password: chatpass123
-              database: chat
+        auth:
+          username: chat
+          password: chatpass123
+          database: chat
         primary:
           persistence:
             enabled: true
@@ -26,7 +24,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: belovr-db
+    namespace: belovr
 
   syncPolicy:
     automated:
