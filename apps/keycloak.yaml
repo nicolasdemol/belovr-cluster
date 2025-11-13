@@ -1,0 +1,52 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keycloak
+  namespace: argocd
+spec:
+  project: belovr
+
+  source:
+    repoURL: oci://registry-1.docker.io/bitnamicharts/keycloak
+    targetRevision: "25.2.0"
+    path: .
+    helm:
+      valuesObject:
+        # --- Configuration de base ---
+        auth:
+          adminUser: admin
+          adminPassword: adminpass # ⚠️ tu pourras remplacer par un Secret ensuite
+        production: false
+
+        # --- Persistance ---
+        postgresql:
+          enabled: true
+          auth:
+            username: bn_keycloak
+            password: keycloakdbpass
+            database: keycloak_db
+          primary:
+            persistence:
+              enabled: true
+              size: 2Gi
+              storageClass: microk8s-hostpath
+
+        # --- Réseau ---
+        service:
+          type: ClusterIP
+
+        # --- Ingress (optionnel) ---
+        ingress:
+          enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: belovr-auth
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - Replace=true
