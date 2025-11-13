@@ -19,7 +19,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: belovr-preprod
+    namespace: belovr
 
   syncPolicy:
     automated:
