@@ -12,6 +12,10 @@ spec:
     path: .
     helm:
       valuesObject:
+        global:
+          security:
+            allowImmutableImages: true
+
         image:
           registry: registry-1.docker.io
           repository: bitnamisecure/keycloak
