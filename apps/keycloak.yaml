@@ -18,8 +18,8 @@ spec:
 
         image:
           registry: docker.io
-          repository: keycloak/keycloak
-          digest: "sha256:653852bfdea2be6e958b9e90a976eff1c6de34edd55f2f679bdc48ef16bc528e"
+          repository: bitnamilegacy/keycloak
+          digest: "sha256:da3df0976a9f9a664bdbde6cb5308b78f03ac94d0abf33b2df355bbb06cbc5b9"
 
         auth:
           adminUser: admin
