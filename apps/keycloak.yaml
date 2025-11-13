@@ -29,7 +29,6 @@ spec:
             persistence:
               enabled: true
               size: 2Gi
-              storageClass: microk8s-hostpath
 
         # --- Réseau ---
         service:
@@ -41,7 +40,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: belovr-auth
+    namespace: belovr
 
   syncPolicy:
     automated:
@@ -49,4 +48,3 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - Replace=true
