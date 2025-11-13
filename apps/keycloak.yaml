@@ -9,33 +9,18 @@ spec:
   source:
     repoURL: oci://registry-1.docker.io/bitnamicharts/keycloak
     targetRevision: "25.2.0"
-    path: .
     helm:
       valuesObject:
         auth:
           adminUser: admin
-          adminPassword: adminpass
-        production: false
-
-        # --- Persistance ---
+          adminPassword: "adminpass"
         postgresql:
           enabled: true
           auth:
-            username: bn_keycloak
-            password: keycloakdbpass
-            database: keycloak_db
-          primary:
-            persistence:
-              enabled: true
-              size: 2Gi
+            username: keycloak
+            password: keycloakpass
+            database: keycloak
 
   destination:
     server: https://kubernetes.default.svc
     namespace: belovr
-
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
