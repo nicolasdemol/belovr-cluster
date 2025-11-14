@@ -25,7 +25,6 @@ spec:
           adminUser: admin
           adminPassword: "adminpass"
 
-        # 🚀 Activation de l'Ingress
         ingress:
           enabled: true
           hostname: "keycloak.192.168.1.12.nip.io"
