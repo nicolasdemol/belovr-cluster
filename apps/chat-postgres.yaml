@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: chat-postgres
-  namespace: argocd
+  namespace: belovr
 spec:
   project: belovr
 
