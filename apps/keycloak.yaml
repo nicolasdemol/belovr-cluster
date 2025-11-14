@@ -25,6 +25,9 @@ spec:
           adminUser: admin
           adminPassword: "adminpass"
 
+        ingress:
+          enabled: true
+
         postgresql:
           enabled: true
           image:
@@ -39,3 +42,10 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: belovr
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
