@@ -8,11 +8,12 @@ spec:
 
   # Dépôts Git et registries OCI autorisés
   sourceRepos:
-    - https://github.com/nicolasdemol/belovr-cluster.git
-    - registry-1.docker.io/bitnamicharts
+    - "*"
 
   # Clusters et namespaces autorisés
   destinations:
+    - namespace: belovr
+      server: https://kubernetes.default.svc
     - namespace: belovr-*
       server: https://kubernetes.default.svc
 
