@@ -20,13 +20,3 @@ spec:
                 name: argocd-server
                 port:
                   name: https
-    - host: keycloak.192.168.1.12.nip.io
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: keycloak
-                port:
-                  number: 80
