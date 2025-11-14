@@ -1,10 +1,10 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: argocd-server-tls
+  name: argocd-ingress-http
   namespace: argocd
 spec:
-  secretName: argocd-server-tls
+  secretName: argocd-ingress-http
   issuerRef:
     name: selfsigned
   commonName: argocd.192.168.1.12.nip.io
