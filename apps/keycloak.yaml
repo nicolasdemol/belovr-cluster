@@ -25,8 +25,21 @@ spec:
           adminUser: admin
           adminPassword: "adminpass"
 
+        # 🚀 Activation de l'Ingress
         ingress:
           enabled: true
+          ingressClassName: nginx
+          hostname: "keycloak.192.168.1.12.nip.io"
+          annotations:
+            nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+          tls: false # pas de TLS pour l’instant (on ajoute après si tu veux)
+
+        # ⚙️ Env nécessaire pour Keycloak derrière Ingress
+        extraEnvVars:
+          - name: KC_HOSTNAME
+            value: "keycloak.192.168.1.12.nip.io"
+          - name: KC_PROXY
+            value: "edge"
 
         postgresql:
           enabled: true
