@@ -4,7 +4,7 @@ metadata:
   name: user-postgres
   namespace: belovr
 spec:
-  project: belovr
+  project: default
 
   source:
     repoURL: oci://registry-1.docker.io/bitnamicharts/postgresql
