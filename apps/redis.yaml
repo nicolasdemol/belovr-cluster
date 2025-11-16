@@ -28,7 +28,7 @@ spec:
             ports:
               redis: 6379
             nodePorts:
-              redis: 30001
+              redis: "30001"
 
   destination:
     server: https://kubernetes.default.svc
