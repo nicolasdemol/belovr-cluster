@@ -13,19 +13,22 @@ spec:
     helm:
       valuesObject:
         architecture: standalone
+
         auth:
           enabled: true
           password: redispass
+
         master:
           persistence:
             enabled: true
             size: 2Gi
-        service:
-          type: NodePort
-          ports:
-            redis: 6379
-          nodePorts:
-            redis: 30001
+
+          service:
+            type: NodePort
+            ports:
+              redis: 6379
+            nodePorts:
+              redis: 30001
 
   destination:
     server: https://kubernetes.default.svc
