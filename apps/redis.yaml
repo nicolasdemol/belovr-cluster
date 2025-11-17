@@ -15,8 +15,7 @@ spec:
         architecture: standalone
 
         auth:
-          enabled: true
-          password: redispass
+          enabled: false
 
         master:
           persistence:
