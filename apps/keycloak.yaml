@@ -29,16 +29,12 @@ spec:
           enabled: true
           hostname: "keycloak.192.168.1.12.nip.io"
 
-        postgresql:
-          enabled: true
-          image:
-            registry: docker.io
-            repository: bitnamisecure/postgresql
-            digest: "sha256:14aa30df4c41d43590a0ae59b1963522f5e4344bedda67e1f2e423ea8267c115"
-          auth:
-            username: keycloak
-            password: keycloakpass
-            database: keycloak
+        externalDatabase:
+          host: keycloak-db-postgresql.belovr.svc.cluster.local
+          user: keycloak
+          password: keycloakpass
+          database: keycloak
+          port: 5432
 
   destination:
     server: https://kubernetes.default.svc
