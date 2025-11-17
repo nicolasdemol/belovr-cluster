@@ -29,6 +29,9 @@ spec:
           enabled: true
           hostname: "keycloak.192.168.1.12.nip.io"
 
+        postgresql:
+          enabled: false
+
         externalDatabase:
           host: keycloak-db-postgresql.belovr.svc.cluster.local
           user: keycloak
