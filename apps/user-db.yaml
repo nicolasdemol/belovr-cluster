@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: content-postgres
+  name: user-db
   namespace: argocd
 spec:
   project: default
@@ -13,9 +13,9 @@ spec:
     helm:
       valuesObject:
         auth:
-          username: content
-          password: contentpass
-          database: content
+          username: user
+          password: userpass
+          database: user
         primary:
           persistence:
             enabled: true

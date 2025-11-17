@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: chat-postgres
+  name: content-db
   namespace: argocd
 spec:
   project: default
@@ -13,9 +13,9 @@ spec:
     helm:
       valuesObject:
         auth:
-          username: chat
-          password: chatpass
-          database: chat
+          username: content
+          password: contentpass
+          database: content
         primary:
           persistence:
             enabled: true
