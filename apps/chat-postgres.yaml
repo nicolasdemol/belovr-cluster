@@ -22,13 +22,6 @@ spec:
             size: 2Gi
             storageClass: microk8s-hostpath
 
-          service:
-            type: NodePort
-            ports:
-              postgresql: 5432
-            nodePorts:
-              postgresql: "30432"
-
   destination:
     server: https://kubernetes.default.svc
     namespace: belovr

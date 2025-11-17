@@ -23,13 +23,6 @@ spec:
             enabled: true
             size: 2Gi
 
-          service:
-            type: NodePort
-            ports:
-              redis: 6379
-            nodePorts:
-              redis: "30001"
-
   destination:
     server: https://kubernetes.default.svc
     namespace: belovr
