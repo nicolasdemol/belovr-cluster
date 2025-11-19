@@ -7,35 +7,29 @@ spec:
   project: default
 
   source:
-    repoURL: oci://registry-1.docker.io/bitnamicharts/rabbitmq
+    repoURL: oci://registry-1.docker.io/cloudpirates
     chart: rabbitmq
-    targetRevision: "16.0.14"
+    targetRevision: "0.7.8"
+
     helm:
       valuesObject:
-        global:
-          security:
-            allowInsecureImages: true
-
-        image:
-          registry: docker.io
-          repository: bitnamisecure/rabbitmq
-          digest: "sha256:6b1bc580ac0fc5cc3581127c1599268af91e642181d43bd78f5ec4bc2fa4753d"
-
+        # -------- AUTH --------
         auth:
+          enabled: true
           username: rabbitmq
           password: "rabbitmqpass"
           erlangCookie: "myerlangcookie123"
 
+        # -------- PERSISTENCE --------
         persistence:
           enabled: true
           storageClass: microk8s-hostpath
           size: 2Gi
 
-        service:
-          type: ClusterIP
-          ports:
-            amqp: 5672
-            manager: 15672
+        # -------- OPTIONAL: ADD UI INGRESS --------
+        ingress:
+          enabled: true
+          hostname: "rabbitmq.192.168.1.12.nip.io"
 
   destination:
     server: https://kubernetes.default.svc
