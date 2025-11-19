@@ -44,6 +44,9 @@ spec:
           httpPort: 6333
           grpcPort: 6334
           p2pPort: 6335
+          internalPort: 6336
+          k8sProbePort: 6337
+          debugPort: 6339
 
         # -------------------------------------------------------------------------------------
         # RESOURCES (recommended for Qdrant)
