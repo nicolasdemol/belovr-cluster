@@ -25,10 +25,18 @@ spec:
           storageClass: microk8s-hostpath
           size: 2Gi
 
-        # -------- OPTIONAL: ADD UI INGRESS --------
+        # -------- INGRESS UI --------
         ingress:
           enabled: true
-          hostname: "rabbitmq.192.168.1.12.nip.io"
+          className: nginx
+          hosts:
+            - host: rabbitmq.192.168.1.12.nip.io
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls: []
+          annotations:
+            kubernetes.io/ingress.class: nginx
 
   destination:
     server: https://kubernetes.default.svc
