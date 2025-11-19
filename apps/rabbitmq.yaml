@@ -12,6 +12,15 @@ spec:
     targetRevision: "16.0.14"
     helm:
       valuesObject:
+        global:
+          security:
+            allowInsecureImages: true
+
+        image:
+          registry: docker.io
+          repository: bitnamilegacy/rabbitmq
+          digest: "sha256:6b1bc580ac0fc5cc3581127c1599268af91e642181d43bd78f5ec4bc2fa4753d"
+
         auth:
           username: rabbitmq
           password: "rabbitmqpass"
