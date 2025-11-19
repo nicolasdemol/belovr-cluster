@@ -41,22 +41,9 @@ spec:
         # -------------------------------------------------------------------------------------
         service:
           type: ClusterIP
-          ports:
-            http:
-              name: http
-              port: 6333
-              targetPort: 6333
-              checksEnabled: true
-            grpc:
-              name: grpc
-              port: 6334
-              targetPort: 6334
-              checksEnabled: false
-            p2p:
-              name: p2p
-              port: 6335
-              targetPort: 6335
-              checksEnabled: false
+          httpPort: 6333
+          grpcPort: 6334
+          p2pPort: 6335
 
         # -------------------------------------------------------------------------------------
         # RESOURCES (recommended for Qdrant)
