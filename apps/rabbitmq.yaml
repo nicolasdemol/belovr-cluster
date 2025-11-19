@@ -7,8 +7,7 @@ spec:
   project: default
 
   source:
-    repoURL: oci://registry-1.docker.io/cloudpirates
-    chart: rabbitmq
+    repoURL: oci://registry-1.docker.io/cloudpirates/rabbitmq
     targetRevision: "0.7.8"
 
     helm:
