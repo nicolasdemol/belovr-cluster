@@ -40,11 +40,16 @@ spec:
         # SERVICE
         # -------------------------------------------------------------------------------------
         service:
-          type: ClusterIP
           ports:
-            api: 6333 # REST / metrics
-            grpc: 6334 # gRPC
-            internal: 6335
+            http:
+              port: 6333
+              checksEnabled: true
+            grpc:
+              port: 6334
+              checksEnabled: false
+            p2p:
+              port: 6335
+              checksEnabled: false
 
         # -------------------------------------------------------------------------------------
         # RESOURCES (recommended for Qdrant)
