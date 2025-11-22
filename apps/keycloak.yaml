@@ -39,7 +39,7 @@ spec:
         database:
           type: postgres
           host: keycloak-db-postgresql.belovr.svc.cluster.local
-          port: 5432
+          port: "5432"
           username: keycloak
           password: keycloakpass
           name: keycloak
