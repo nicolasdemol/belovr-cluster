@@ -20,7 +20,6 @@ spec:
           httpEnabled: true
           production: false
           hostnameStrict: false
-          hostnameStrictHttps: false
           proxyHeaders: "xforwarded"
 
         database:
@@ -39,7 +38,6 @@ spec:
           className: nginx
           annotations:
             nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-            nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
           hosts:
             - host: keycloak.192.168.1.12.nip.io
               paths:
