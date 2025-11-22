@@ -7,49 +7,42 @@ spec:
   project: default
 
   source:
-    repoURL: oci://registry-1.docker.io/bitnamicharts/keycloak
-    targetRevision: "25.2.0"
+    repoURL: oci://registry-1.docker.io/cloudpirates/keycloak
+    targetRevision: "0.8.7"
     path: .
     helm:
       valuesObject:
-        global:
-          security:
-            allowInsecureImages: true
-
-        image:
-          registry: docker.io
-          repository: bitnamilegacy/keycloak
-          digest: "sha256:da3df0976a9f9a664bdbde6cb5308b78f03ac94d0abf33b2df355bbb06cbc5b9"
-
-        auth:
+        keycloak:
           adminUser: admin
-          adminPassword: "adminpass"
+          adminPassword: adminpass
+          hostname: keycloak.192.168.1.12.nip.io
+          httpEnabled: true
+          production: false
+          proxyHeaders: xforwarded
+          hostnameStrict: false
+          hostnameStrictHttps: false
 
         ingress:
           enabled: true
-          hostname: "keycloak.192.168.1.12.nip.io"
+          className: nginx
+          annotations:
+            nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+            nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+            nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+          hosts:
+            - host: keycloak.192.168.1.12.nip.io
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls: [] # en HTTP pour l’instant
 
-        extraEnvVars:
-          - name: KC_HOSTNAME
-            value: "keycloak.192.168.1.12.nip.io"
-          - name: KC_HTTP_ENABLED
-            value: "true"
-          - name: KC_PROXY
-            value: "edge"
-          - name: KC_HOSTNAME_STRICT
-            value: "false"
-          - name: KC_HOSTNAME_STRICT_HTTPS
-            value: "false"
-
-        postgresql:
-          enabled: false
-
-        externalDatabase:
+        database:
+          type: postgres
           host: keycloak-db-postgresql.belovr.svc.cluster.local
-          user: keycloak
-          password: keycloakpass
-          database: keycloak
           port: 5432
+          username: keycloak
+          password: keycloakpass
+          name: keycloak
 
   destination:
     server: https://kubernetes.default.svc
