@@ -18,8 +18,7 @@ spec:
           hostname: keycloak.192.168.1.12.nip.io
           httpEnabled: true
           production: false
-          hostnameStrict: false
-          hostnameStrictHttps: false
+          proxyHeaders: "xforwarded"
 
         database:
           type: "postgres"
