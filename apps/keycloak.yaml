@@ -22,6 +22,17 @@ spec:
           hostnameStrict: false
           hostnameStrictHttps: false
 
+        database:
+          type: "postgres"
+          host: "keycloak-db-postgresql.belovr.svc.cluster.local"
+          port: "5432"
+          name: "keycloak"
+          username: "keycloak"
+          password: "keycloakpass"
+
+        postgres:
+          enabled: false
+
         ingress:
           enabled: true
           className: nginx
@@ -35,14 +46,6 @@ spec:
                 - path: /
                   pathType: Prefix
           tls: [] # en HTTP pour l’instant
-
-        database:
-          type: postgres
-          host: keycloak-db-postgresql.belovr.svc.cluster.local
-          port: "5432"
-          username: keycloak
-          password: keycloakpass
-          name: keycloak
 
   destination:
     server: https://kubernetes.default.svc
