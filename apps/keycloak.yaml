@@ -1,51 +1,57 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-  name: belovr-unified-ingress
-  namespace: belovr
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    # Supprime SkipDryRun si ça bloque, garde le HealthStatus
-    argocd.argoproj.io/healthstatus: "Healthy"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      proxy_ssl_server_name on;
-      if ($request_uri ~* "^/video") {
-          set $proxy_upstream_protocol https;
-          proxy_set_header Host cdn.belovr.com;
-      }
-      if ($request_uri ~* "^/images") {
-          set $proxy_upstream_protocol https;
-          proxy_set_header Host images.belovr.com;
-      }
-spec: # <--- UN SEUL spec ici
-  tls:
-    - hosts:
-        - dev.192.168.1.12.nip.io
-      secretName: belovr-app-tls-secret
-  rules:
-    - host: dev.192.168.1.12.nip.io
-      http:
-        paths:
-          - path: /video
-            pathType: Prefix
-            backend:
-              service:
-                name: proxy-cdn-belovr
-                port:
-                  number: 443
-          - path: /images
-            pathType: Prefix
-            backend:
-              service:
-                name: proxy-images-belovr
-                port:
-                  number: 443
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: frontend-service
-                port:
-                  number: 3000
+  name: keycloak
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: oci://registry-1.docker.io/cloudpirates/keycloak
+    targetRevision: "0.8.7"
+    path: .
+    helm:
+      valuesObject:
+        keycloak:
+          adminUser: admin
+          adminPassword: adminpass
+
+          hostname: keycloak.192.168.1.12.nip.io
+          httpEnabled: true
+          production: false
+          hostnameStrict: false
+          proxyHeaders: "xforwarded"
+
+        database:
+          type: "postgres"
+          host: "keycloak-db-postgresql.belovr.svc.cluster.local"
+          port: "5432"
+          name: "keycloak"
+          username: "keycloak"
+          password: "keycloakpass"
+
+        postgres:
+          enabled: false
+
+        ingress:
+          enabled: true
+          className: nginx
+          annotations:
+            nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+          hosts:
+            - host: keycloak.192.168.1.12.nip.io
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls: [] # en HTTP pour l’instant
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: belovr
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
