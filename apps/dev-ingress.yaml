@@ -5,15 +5,12 @@ metadata:
   namespace: belovr
   annotations:
     kubernetes.io/ingress.class: nginx
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
-    # FORCE L'ÉTAT VERT DANS ARGOCD
+    # Supprime SkipDryRun si ça bloque, garde le HealthStatus
     argocd.argoproj.io/healthstatus: "Healthy"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    # On définit le défaut sur HTTP (pour ton Next.js)
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       proxy_ssl_server_name on;
-      # On force le HTTPS uniquement pour les chemins Cloudflare
       if ($request_uri ~* "^/video") {
           set $proxy_upstream_protocol https;
           proxy_set_header Host cdn.belovr.com;
@@ -22,8 +19,7 @@ metadata:
           set $proxy_upstream_protocol https;
           proxy_set_header Host images.belovr.com;
       }
-spec:
-  spec:
+spec: # <--- UN SEUL spec ici
   tls:
     - hosts:
         - dev.192.168.1.12.nip.io
