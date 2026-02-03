@@ -23,10 +23,11 @@ metadata:
           proxy_set_header Host images.belovr.com;
       }
 spec:
+  spec:
   tls:
     - hosts:
         - dev.192.168.1.12.nip.io
-      secretName: argocd-ingress-http
+      secretName: belovr-app-tls-secret
   rules:
     - host: dev.192.168.1.12.nip.io
       http:
