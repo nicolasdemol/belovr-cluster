@@ -38,7 +38,7 @@ spec:
     - { name: realtime, port: 4500, targetPort: 4500 }
     - { name: ia, port: 8080, targetPort: 8080 }
 ---
-# L'INGRESS UNIFIÉ (Le cerveau du routage)
+# L'INGRESS UNIFIÉ (Version sécurisée pour App Router)
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -49,14 +49,8 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       proxy_ssl_server_name on;
-      if ($request_uri ~* "^/video") {
-          set $proxy_upstream_protocol https;
-          proxy_set_header Host cdn.belovr.com;
-      }
-      if ($request_uri ~* "^/images") {
-          set $proxy_upstream_protocol https;
-          proxy_set_header Host images.belovr.com;
-      }
+      if ($request_uri ~* "^/video") { set $proxy_upstream_protocol https; proxy_set_header Host cdn.belovr.com; }
+      if ($request_uri ~* "^/images") { set $proxy_upstream_protocol https; proxy_set_header Host images.belovr.com; }
 spec:
   ingressClassName: nginx
   tls:
@@ -66,17 +60,19 @@ spec:
     - host: dev.192.168.1.12.nip.io
       http:
         paths:
-          # Mapping des APIs vers le Super-Service
+          # AUTH : On garde /srv/auth car Next-Auth est rigide là-dessus
           - {
-              path: /api/auth,
+              path: /srv/auth,
               pathType: Prefix,
               backend:
                 {
                   service: { name: belovr-dev-service, port: { number: 3001 } },
                 },
             }
+
+          # AUTRES SERVICES : On utilise /srv/ pour éviter le conflit avec app/api/
           - {
-              path: /api/user,
+              path: /srv/user,
               pathType: Prefix,
               backend:
                 {
@@ -84,7 +80,7 @@ spec:
                 },
             }
           - {
-              path: /api/content,
+              path: /srv/content,
               pathType: Prefix,
               backend:
                 {
@@ -92,7 +88,7 @@ spec:
                 },
             }
           - {
-              path: /api/chat,
+              path: /srv/chat,
               pathType: Prefix,
               backend:
                 {
@@ -100,7 +96,7 @@ spec:
                 },
             }
           - {
-              path: /api/social,
+              path: /srv/social,
               pathType: Prefix,
               backend:
                 {
@@ -108,7 +104,7 @@ spec:
                 },
             }
           - {
-              path: /api/payment,
+              path: /srv/payment,
               pathType: Prefix,
               backend:
                 {
@@ -116,7 +112,7 @@ spec:
                 },
             }
           - {
-              path: /api/realtime,
+              path: /srv/realtime,
               pathType: Prefix,
               backend:
                 {
@@ -124,14 +120,15 @@ spec:
                 },
             }
           - {
-              path: /api/ia,
+              path: /srv/ia,
               pathType: Prefix,
               backend:
                 {
                   service: { name: belovr-dev-service, port: { number: 8080 } },
                 },
             }
-          # Cloudflare Proxies
+
+          # MEDIAS & FRONTEND
           - {
               path: /video,
               pathType: Prefix,
@@ -146,7 +143,6 @@ spec:
                   service: { name: proxy-images-belovr, port: { number: 443 } },
                 },
             }
-          # Root Frontend
           - {
               path: /,
               pathType: Prefix,
