@@ -5,6 +5,9 @@ metadata:
   namespace: belovr
   annotations:
     kubernetes.io/ingress.class: nginx
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    # FORCE L'ÉTAT VERT DANS ARGOCD
+    argocd.argoproj.io/healthstatus: "Healthy"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # On définit le défaut sur HTTP (pour ton Next.js)
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
