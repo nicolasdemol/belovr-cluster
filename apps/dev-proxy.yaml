@@ -1,4 +1,4 @@
-# Le Pod qui servira de support à toutes les interceptions
+# LE POD SUPPORT (Ton Leurre unique)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,7 +18,8 @@ spec:
         - name: pause
           image: registry.k8s.io/pause:3.9
 ---
-# Définition de TOUS les services (un par port)
+# TOUS LES SERVICES À INTERCEPTER
+# Ils pointent tous vers le label 'app: belovr-dev'
 apiVersion: v1
 kind: Service
 metadata:
