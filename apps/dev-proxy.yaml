@@ -1,0 +1,51 @@
+# 1. Le Service et Déploiement "Leurre" pour Telepresence
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-v2
+  namespace: belovr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: pause
+          image: registry.k8s.io/pause:3.9
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: belovr
+spec:
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: frontend
+---
+# 2. Les proxys vers tes domaines Cloudflare (ExternalName)
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxy-cdn-belovr
+  namespace: belovr
+spec:
+  type: ExternalName
+  externalName: cdn.belovr.com
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxy-images-belovr
+  namespace: belovr
+spec:
+  type: ExternalName
+  externalName: images.belovr.com
