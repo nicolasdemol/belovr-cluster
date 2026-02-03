@@ -1,51 +1,101 @@
-# 1. Le Service et Déploiement "Leurre" pour Telepresence
+# Le Pod qui servira de support à toutes les interceptions
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-v2
+  name: belovr-dev-hub
   namespace: belovr
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: frontend
+      app: belovr-dev
   template:
     metadata:
       labels:
-        app: frontend
+        app: belovr-dev
     spec:
       containers:
         - name: pause
           image: registry.k8s.io/pause:3.9
 ---
+# Définition de TOUS les services (un par port)
 apiVersion: v1
 kind: Service
 metadata:
   name: frontend-service
   namespace: belovr
 spec:
-  ports:
-    - name: http
-      port: 3000
-      targetPort: 3000
-  selector:
-    app: frontend
----
-# 2. Les proxys vers tes domaines Cloudflare (ExternalName)
-apiVersion: v1
-kind: Service
-metadata:
-  name: proxy-cdn-belovr
-  namespace: belovr
-spec:
-  type: ExternalName
-  externalName: cdn.belovr.com
+  ports: [{ name: http, port: 3000, targetPort: 3000 }]
+  selector: { app: belovr-dev }
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: proxy-images-belovr
+  name: auth-service
   namespace: belovr
 spec:
-  type: ExternalName
-  externalName: images.belovr.com
+  ports: [{ name: http, port: 3001, targetPort: 3001 }]
+  selector: { app: belovr-dev }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: belovr
+spec:
+  ports: [{ name: http, port: 4000, targetPort: 4000 }]
+  selector: { app: belovr-dev }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: content-service
+  namespace: belovr
+spec:
+  ports: [{ name: http, port: 4100, targetPort: 4100 }]
+  selector: { app: belovr-dev }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-service
+  namespace: belovr
+spec:
+  ports: [{ name: http, port: 4200, targetPort: 4200 }]
+  selector: { app: belovr-dev }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: social-service
+  namespace: belovr
+spec:
+  ports: [{ name: http, port: 4300, targetPort: 4300 }]
+  selector: { app: belovr-dev }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service
+  namespace: belovr
+spec:
+  ports: [{ name: http, port: 4400, targetPort: 4400 }]
+  selector: { app: belovr-dev }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: realtime-service
+  namespace: belovr
+spec:
+  ports: [{ name: http, port: 4500, targetPort: 4500 }]
+  selector: { app: belovr-dev }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ia-service
+  namespace: belovr
+spec:
+  ports: [{ name: http, port: 8080, targetPort: 8080 }]
+  selector: { app: belovr-dev }
