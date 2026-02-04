@@ -16,10 +16,10 @@ spec:
           adminUser: admin
           adminPassword: adminpass
 
-          hostname: keycloak.192.168.1.12.nip.io
+          hostname: sso.belovr.com
           httpEnabled: true
-          production: false
-          hostnameStrict: false
+          production: true
+          hostnameStrict: true
           proxyHeaders: "xforwarded"
 
         database:
@@ -37,13 +37,17 @@ spec:
           enabled: true
           className: nginx
           annotations:
+            nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
             nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
           hosts:
-            - host: keycloak.192.168.1.12.nip.io
+            - host: sso.belovr.com
               paths:
                 - path: /
                   pathType: Prefix
-          tls: [] # en HTTP pour l’instant
+          tls: 
+            - hosts:
+                - keycloak.belovr.com
+              secretName: belovr-app-tls-secret
 
   destination:
     server: https://kubernetes.default.svc
