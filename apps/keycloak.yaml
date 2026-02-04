@@ -12,6 +12,12 @@ spec:
     path: .
     helm:
       valuesObject:
+        # --- AJOUT IMAGE PERSONNALISÉE ---
+        image:
+          repository: corsaire300iq/custom-theme-keycloak
+          tag: "latest"
+          pullPolicy: Always
+
         keycloak:
           adminUser: admin
           adminPassword: adminpass
@@ -44,7 +50,7 @@ spec:
               paths:
                 - path: /
                   pathType: Prefix
-          tls: 
+          tls:
             - hosts:
                 - sso.belovr.com
               secretName: belovr-app-tls-secret
