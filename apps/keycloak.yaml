@@ -12,12 +12,24 @@ spec:
     path: .
     helm:
       valuesObject:
-        # 1. Configuration de l'image
-        image:
-          registry: docker.io
-          repository: corsaire300iq/custom-theme-keycloak
-          tag: "latest"
-          imagePullPolicy: Always
+        # 2. Ton InitContainer pour injecter le thème
+        extraInitContainers:
+          - name: add-custom-theme
+            image: corsaire300iq/custom-theme-keycloak:latest
+            imagePullPolicy: Always
+            command:
+              - sh
+              - -c
+              - |
+                echo "Copie du thème Belovr..."
+                # On copie tout le contenu du dossier themes de ton image vers le volume partagé
+                cp -r /opt/keycloak/themes/* /target/themes/
+            volumeMounts:
+              - name: keycloak-themes # Nom interne au chart pour le dossier themes
+                mountPath: /target/themes
+        # On garde les thèmes persistants
+        preserveThemes: false 
+        preserveProviders: false
 
         # 2. Secrets de pull globaux
         global:
