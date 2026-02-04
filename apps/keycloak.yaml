@@ -12,23 +12,24 @@ spec:
     path: .
     helm:
       valuesObject:
-        # 2. Ton InitContainer pour injecter le thème
+        # On injecte le JAR via l'InitContainer
         extraInitContainers:
-          - name: add-custom-theme
+          - name: add-keycloakify-theme
             image: corsaire300iq/custom-theme-keycloak:latest
             imagePullPolicy: Always
             command:
               - sh
               - -c
               - |
-                echo "Copie du thème Belovr..."
-                # On copie tout le contenu du dossier themes de ton image vers le volume partagé
-                cp -r /opt/keycloak/themes/* /target/themes/
+                echo "Installation du JAR Keycloakify..."
+                # On cherche le JAR dans ton image (souvent dans /dist_keycloak ou /opt/keycloak/providers)
+                # Et on le copie vers le volume partagé des providers
+                cp /opt/keycloak/providers/*.jar /target/providers/
             volumeMounts:
-              - name: keycloak-themes # Nom interne au chart pour le dossier themes
-                mountPath: /target/themes
-        # On garde les thèmes persistants
-        preserveThemes: false 
+              - name: keycloak-providers
+                mountPath: /target/providers
+        # On désactive la persistance vide pour laisser Keycloak voir nos fichiers
+        preserveThemes: true
         preserveProviders: false
 
         # 2. Secrets de pull globaux
