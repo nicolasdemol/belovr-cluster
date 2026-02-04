@@ -1,14 +1,12 @@
-# 1. LE SECRET POUR LE CHALLENGE DNS (Référence pour cert-manager)
-# Note: Assure-toi que ce secret existe dans le namespace où cert-manager tourne
-# ou utilise un ClusterIssuer qui pointe vers le bon secret.
----
+# 1. LE CLUSTER ISSUER (Global)
+# Utilise ton Token API Cloudflare stocké dans le namespace cert-manager
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-dns-issuer
 spec:
   acme:
-    email: nyco.demol@gmail.com
+    email: nyco.demol@gmail.com # 👈 Remplace par ton email réel
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: letsencrypt-dns-account-key
@@ -19,7 +17,24 @@ spec:
               name: cloudflare-api-token-secret
               key: api-token
 ---
-# 2. LE POD DE SUPPORT (HUB)
+# 2. LE CERTIFICAT WILDCARD
+# Un seul certificat pour protéger tous les sous-domaines *.belovr.com
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: belovr-wildcard-tls
+  namespace: belovr
+spec:
+  secretName: belovr-app-tls-secret
+  issuerRef:
+    name: letsencrypt-dns-issuer
+    kind: ClusterIssuer
+  commonName: "*.belovr.com"
+  dnsNames:
+    - "*.belovr.com"
+    - "belovr.com"
+---
+# 3. LE POD DE SUPPORT (HUB)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -38,7 +53,7 @@ spec:
       containers:
         - { name: pause, image: registry.k8s.io/pause:3.9 }
 ---
-# 3. LE SERVICE INTERNE (Vers ton PC / Telepresence)
+# 4. LE SUPER-SERVICE (Vers Telepresence / Local)
 apiVersion: v1
 kind: Service
 metadata:
@@ -57,7 +72,7 @@ spec:
     - { name: realtime, port: 4500, targetPort: 4500 }
     - { name: ia, port: 8080, targetPort: 8080 }
 ---
-# 4. LES SERVICES EXTERNES (Proxy vers Cloudflare)
+# 5. SERVICES EXTERNES (Cloudflare)
 apiVersion: v1
 kind: Service
 metadata:
@@ -76,100 +91,88 @@ spec:
   type: ExternalName
   externalName: images.belovr.com
 ---
-# 5. L'INGRESS UNIFIÉ (SSL Let's Encrypt + Routing)
+# 6. L'INGRESS MULTI-SERVICES (SSL Wildcard + Routing)
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: belovr-main-ingress
   namespace: belovr
   annotations:
-    # --- SSL DNS Challenge ---
     cert-manager.io/cluster-issuer: "letsencrypt-dns-issuer"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-
-    # --- Configuration du Proxy et des Headers ---
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      # Sécurité SSL pour la liaison Ingress -> Cloudflare
       proxy_ssl_verify off;
       proxy_ssl_server_name on;
-      proxy_ssl_name cdn.belovr.com;
-      proxy_set_header Host cdn.belovr.com;
-
-      # Forcer le Referer pour le Worker Cloudflare
       proxy_set_header Referer https://cdn.belovr.com/;
-
-      # Headers CORS & Streaming indispensables
-      proxy_hide_header 'Access-Control-Allow-Origin';
-      proxy_hide_header 'Access-Control-Expose-Headers';
+      # Headers CORS indispensables pour le streaming iOS
       add_header 'Access-Control-Allow-Origin' '*' always;
       add_header 'Access-Control-Allow-Methods' 'GET, OPTIONS, HEAD' always;
       add_header 'Access-Control-Allow-Headers' 'Range, Content-Type, Authorization' always;
-      add_header 'Access-Control-Expose-Headers' 'Content-Length, Content-Range, ETag' always;
-
-      # Gestion automatique des preflights OPTIONS
-      if ($request_method = 'OPTIONS') {
-          add_header 'Access-Control-Allow-Origin' '*';
-          add_header 'Access-Control-Allow-Methods' 'GET, OPTIONS, HEAD';
-          add_header 'Access-Control-Allow-Headers' 'Range, Content-Type, Authorization';
-          add_header 'Access-Control-Max-Age' 1728000;
-          add_header 'Content-Type' 'text/plain; charset=utf-8';
-          add_header 'Content-Length' 0;
-          return 204;
-      }
 spec:
   ingressClassName: nginx
   tls:
-    - hosts: [dev.192.168.1.12.nip.io]
+    - hosts: ["*.belovr.com", "belovr.com"]
       secretName: belovr-app-tls-secret
   rules:
-    - host: dev.192.168.1.12.nip.io
+    # --- APP (Frontend + Vidéos) ---
+    - host: app.belovr.com
       http:
         paths:
-          # --- MÉDIAS (Vers Cloudflare) ---
           - path: /videos
             pathType: Prefix
             backend:
               service: { name: proxy-cdn-belovr, port: { number: 443 } }
-          - path: /images
-            pathType: Prefix
-            backend:
-              service: { name: proxy-images-belovr, port: { number: 443 } }
-
-          # --- API / BACKEND (Vers local) ---
-          - path: /srv/auth
-            pathType: Prefix
-            backend:
-              service: { name: belovr-dev-service, port: { number: 3001 } }
-          - path: /srv/user
-            pathType: Prefix
-            backend:
-              service: { name: belovr-dev-service, port: { number: 4000 } }
-          - path: /srv/content
-            pathType: Prefix
-            backend:
-              service: { name: belovr-dev-service, port: { number: 4100 } }
-          - path: /srv/chat
-            pathType: Prefix
-            backend:
-              service: { name: belovr-dev-service, port: { number: 4200 } }
-          - path: /srv/social
-            pathType: Prefix
-            backend:
-              service: { name: belovr-dev-service, port: { number: 4300 } }
-          - path: /srv/payment
-            pathType: Prefix
-            backend:
-              service: { name: belovr-dev-service, port: { number: 4400 } }
-          - path: /srv/realtime
-            pathType: Prefix
-            backend:
-              service: { name: belovr-dev-service, port: { number: 4500 } }
-          - path: /srv/ia
-            pathType: Prefix
-            backend:
-              service: { name: belovr-dev-service, port: { number: 8080 } }
-          # --- FRONTEND ---
           - path: /
             pathType: Prefix
             backend:
               service: { name: belovr-dev-service, port: { number: 3000 } }
+
+    # --- SERVICES API ---
+    - host: auth.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: belovr-dev-service, port: { number: 3001 } }
+
+    - host: user.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: belovr-dev-service, port: { number: 4000 } }
+
+    - host: content.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: belovr-dev-service, port: { number: 4100 } }
+
+    - host: chat.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: belovr-dev-service, port: { number: 4200 } }
+
+    - host: realtime.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: belovr-dev-service, port: { number: 4500 } }
+
+    - host: ia.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: belovr-dev-service, port: { number: 8080 } }
