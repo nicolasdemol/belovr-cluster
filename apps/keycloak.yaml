@@ -12,11 +12,13 @@ spec:
     path: .
     helm:
       valuesObject:
-        # --- AJOUT IMAGE PERSONNALISÉE ---
         image:
           repository: corsaire300iq/custom-theme-keycloak
           tag: "latest"
           pullPolicy: Always
+        
+        imagePullSecrets:
+          - name: dockerhub-secret
 
         keycloak:
           adminUser: admin
