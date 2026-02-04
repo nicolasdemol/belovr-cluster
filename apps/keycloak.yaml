@@ -12,15 +12,19 @@ spec:
     path: .
     helm:
       valuesObject:
+        # 1. Configuration de l'image
         image:
+          registry: docker.io
           repository: corsaire300iq/custom-theme-keycloak
           tag: "latest"
-          pullPolicy: Always
+          imagePullPolicy: Always
+
+        # 2. Secrets de pull globaux
+        global:
+          imagePullSecrets:
+            - dockerhub-secret
 
         keycloak:
-          imagePullSecrets:
-            - name: dockerhub-secret
-
           adminUser: admin
           adminPassword: adminpass
 
