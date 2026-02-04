@@ -16,11 +16,11 @@ spec:
           repository: corsaire300iq/custom-theme-keycloak
           tag: "latest"
           pullPolicy: Always
-        
-        imagePullSecrets:
-          - name: dockerhub-secret
 
         keycloak:
+          imagePullSecrets:
+            - name: dockerhub-secret
+
           adminUser: admin
           adminPassword: adminpass
 
