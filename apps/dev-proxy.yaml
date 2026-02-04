@@ -1,4 +1,4 @@
-# LE POD SUPPORT (Un seul suffit pour tout le cluster)
+# LE POD SUPPORT & LE SUPER-SERVICE (Inchangés, c'est parfait)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,18 +15,15 @@ spec:
         app: belovr-dev
     spec:
       containers:
-        - name: pause
-          image: registry.k8s.io/pause:3.9
+        - { name: pause, image: registry.k8s.io/pause:3.9 }
 ---
-# LE SUPER-SERVICE (Un seul objet pour tous tes ports)
 apiVersion: v1
 kind: Service
 metadata:
   name: belovr-dev-service
   namespace: belovr
 spec:
-  selector:
-    app: belovr-dev
+  selector: { app: belovr-dev }
   ports:
     - { name: frontend, port: 3000, targetPort: 3000 }
     - { name: auth, port: 3001, targetPort: 3001 }
@@ -38,19 +35,16 @@ spec:
     - { name: realtime, port: 4500, targetPort: 4500 }
     - { name: ia, port: 8080, targetPort: 8080 }
 ---
-# L'INGRESS UNIFIÉ (Version sécurisée pour App Router)
+# L'INGRESS LOCAL (Ton PC / Telepresence)
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: belovr-unified-ingress
+  name: belovr-local-ingress
   namespace: belovr
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      proxy_ssl_server_name on;
-      if ($request_uri ~* "^/video") { set $proxy_upstream_protocol https; proxy_set_header Host cdn.belovr.com; }
-      if ($request_uri ~* "^/images") { set $proxy_upstream_protocol https; proxy_set_header Host images.belovr.com; }
+    # Nettoie le préfixe /srv/ avant d'envoyer à ton PC (évite les 404 NestJS)
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
   ingressClassName: nginx
   tls:
@@ -60,94 +54,75 @@ spec:
     - host: dev.192.168.1.12.nip.io
       http:
         paths:
-          # AUTH : On garde /srv/auth car Next-Auth est rigide là-dessus
-          - {
-              path: /srv/auth,
-              pathType: Prefix,
-              backend:
-                {
-                  service: { name: belovr-dev-service, port: { number: 3001 } },
-                },
-            }
+          # On capture tout ce qui est après /srv/xxx/ pour le mettre dans $1
+          - path: /srv/auth/(.*)
+            pathType: ImplementationSpecific
+            backend:
+              { service: { name: belovr-dev-service, port: { number: 3001 } } }
+          - path: /srv/user/(.*)
+            pathType: ImplementationSpecific
+            backend:
+              { service: { name: belovr-dev-service, port: { number: 4000 } } }
+          - path: /srv/content/(.*)
+            pathType: ImplementationSpecific
+            backend:
+              { service: { name: belovr-dev-service, port: { number: 4100 } } }
+          # ... Ajoute les autres /srv/ ici sur le même modèle ...
 
-          # AUTRES SERVICES : On utilise /srv/ pour éviter le conflit avec app/api/
-          - {
-              path: /srv/user,
-              pathType: Prefix,
-              backend:
-                {
-                  service: { name: belovr-dev-service, port: { number: 4000 } },
-                },
-            }
-          - {
-              path: /srv/content,
-              pathType: Prefix,
-              backend:
-                {
-                  service: { name: belovr-dev-service, port: { number: 4100 } },
-                },
-            }
-          - {
-              path: /srv/chat,
-              pathType: Prefix,
-              backend:
-                {
-                  service: { name: belovr-dev-service, port: { number: 4200 } },
-                },
-            }
-          - {
-              path: /srv/social,
-              pathType: Prefix,
-              backend:
-                {
-                  service: { name: belovr-dev-service, port: { number: 4300 } },
-                },
-            }
-          - {
-              path: /srv/payment,
-              pathType: Prefix,
-              backend:
-                {
-                  service: { name: belovr-dev-service, port: { number: 4400 } },
-                },
-            }
-          - {
-              path: /srv/realtime,
-              pathType: Prefix,
-              backend:
-                {
-                  service: { name: belovr-dev-service, port: { number: 4500 } },
-                },
-            }
-          - {
-              path: /srv/ia,
-              pathType: Prefix,
-              backend:
-                {
-                  service: { name: belovr-dev-service, port: { number: 8080 } },
-                },
-            }
-
-          # MEDIAS & FRONTEND
-          - {
-              path: /video,
-              pathType: Prefix,
-              backend:
-                { service: { name: proxy-cdn-belovr, port: { number: 443 } } },
-            }
-          - {
-              path: /images,
-              pathType: Prefix,
-              backend:
-                {
-                  service: { name: proxy-images-belovr, port: { number: 443 } },
-                },
-            }
-          - {
-              path: /,
-              pathType: Prefix,
-              backend:
-                {
-                  service: { name: belovr-dev-service, port: { number: 3000 } },
-                },
-            }
+          # FRONTEND (Sans rewrite, direct à la racine)
+          - path: /(.*)
+            pathType: ImplementationSpecific
+            backend:
+              { service: { name: belovr-dev-service, port: { number: 3000 } } }
+---
+# LES SERVICES EXTERNES (Cloudflare)
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxy-cdn-belovr
+  namespace: belovr
+spec:
+  type: ExternalName
+  externalName: cdn.belovr.com
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxy-images-belovr
+  namespace: belovr
+spec:
+  type: ExternalName
+  externalName: images.belovr.com
+---
+# L'INGRESS MÉDIAS (Tunnel vers Cloudflare)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: belovr-proxy-ingress
+  namespace: belovr
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_ssl_server_name on;
+      proxy_ssl_name cdn.belovr.com;
+      proxy_set_header Host cdn.belovr.com;
+      # Bypass CORS
+      proxy_hide_header 'Access-Control-Allow-Origin';
+      add_header 'Access-Control-Allow-Origin' '*' always;
+      add_header 'Access-Control-Allow-Methods' 'GET, OPTIONS' always;
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [dev.192.168.1.12.nip.io]
+      secretName: belovr-app-tls-secret
+  rules:
+    - host: dev.192.168.1.12.nip.io
+      http:
+        paths:
+          - path: /videos/(.*)
+            pathType: ImplementationSpecific
+            backend: { service: { name: proxy-cdn-belovr, port: { number: 443 } } }
+          - path: /images/(.*)
+            pathType: ImplementationSpecific
+            backend: { service: { name: proxy-images-belovr, port: { number: 443 } } }
