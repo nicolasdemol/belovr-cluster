@@ -46,7 +46,7 @@ spec:
                   pathType: Prefix
           tls: 
             - hosts:
-                - keycloak.belovr.com
+                - sso.belovr.com
               secretName: belovr-app-tls-secret
 
   destination:
