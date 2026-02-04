@@ -98,15 +98,17 @@ metadata:
   name: belovr-main-ingress
   namespace: belovr
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-dns-issuer"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://app.belovr.com"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: "100m"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       proxy_ssl_verify off;
       proxy_ssl_server_name on;
       proxy_set_header Referer https://cdn.belovr.com/;
       # Headers CORS indispensables pour le streaming iOS
-      add_header 'Access-Control-Allow-Origin' '*' always;
+      add_header 'Access-Control-Allow-Origin' 'https://app.belovr.com' always;
       add_header 'Access-Control-Allow-Methods' 'GET, OPTIONS, HEAD' always;
       add_header 'Access-Control-Allow-Headers' 'Range, Content-Type, Authorization' always;
 spec:
