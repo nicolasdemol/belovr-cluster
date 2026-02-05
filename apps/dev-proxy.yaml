@@ -177,6 +177,22 @@ spec:
             backend:
               service: { name: belovr-dev-service, port: { number: 4200 } }
 
+    - host: social.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: belovr-dev-service, port: { number: 4300 } }
+
+    - host: payment.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: belovr-dev-service, port: { number: 4400 } }
+
     - host: realtime.belovr.com
       http:
         paths:
