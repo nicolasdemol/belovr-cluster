@@ -64,6 +64,7 @@ spec:
   ports:
     - { name: frontend, port: 3000, targetPort: 3000 }
     - { name: auth, port: 3001, targetPort: 3001 }
+    - { name: admin, port: 3002, targetPort: 3002 }
     - { name: user, port: 4000, targetPort: 4000 }
     - { name: content, port: 4100, targetPort: 4100 }
     - { name: chat, port: 4200, targetPort: 4200 }
@@ -131,6 +132,14 @@ spec:
             pathType: Prefix
             backend:
               service: { name: belovr-dev-service, port: { number: 3000 } }
+
+    - host: admin.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: belovr-dev-service, port: { number: 3002 } }
 
     # --- KEYCLOAK SSO ---
     - host: sso.belovr.com
