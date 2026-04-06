@@ -7,9 +7,9 @@ spec:
   project: default
 
   source:
-    repoURL: oci://registry-1.docker.io/bitnamicharts/postgresql
+    repoURL: registry-1.docker.io
     targetRevision: "18.1.8"
-    path: .
+    path: bitnamicharts/postgresql
     helm:
       valuesObject:
         auth:
