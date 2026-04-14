@@ -2,49 +2,38 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: rabbitmq
-  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "20"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
-
+  project: belovr-platform
   source:
     repoURL: oci://registry-1.docker.io/cloudpirates/rabbitmq
     targetRevision: "0.7.8"
     path: .
     helm:
+      releaseName: rabbitmq
       valuesObject:
-        # -------- AUTH --------
         auth:
           enabled: true
           username: rabbitmq
-          password: "rabbitmqpass"
-          erlangCookie: "myerlangcookie123"
-
-        # -------- PERSISTENCE --------
+          password: rabbitmqpass
+          erlangCookie: myerlangcookie123
         persistence:
           enabled: true
           storageClass: microk8s-hostpath
           size: 2Gi
-
-        # -------- INGRESS UI --------
         ingress:
-          enabled: true
-          className: nginx
-          hosts:
-            - host: rabbitmq.192.168.1.12.nip.io
-              paths:
-                - path: /
-                  pathType: Prefix
-          tls: []
-          annotations:
-            kubernetes.io/ingress.class: nginx
-
+          enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: belovr
-
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PruneLast=true

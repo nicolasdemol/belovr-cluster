@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: belovr-platform
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+  labels:
+    app.kubernetes.io/part-of: belovr-platform
+spec:
+  description: Core platform services for the Belovr cluster.
+  sourceRepos:
+    - https://github.com/nicolasdemol/belovr-cluster.git
+    - https://qdrant.github.io/qdrant-helm
+    - oci://registry-1.docker.io/bitnamicharts/postgresql
+    - oci://registry-1.docker.io/bitnamicharts/redis
+    - oci://registry-1.docker.io/cloudpirates/keycloak
+    - oci://registry-1.docker.io/cloudpirates/rabbitmq
+  destinations:
+    - namespace: belovr
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

@@ -2,15 +2,18 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: user-db
-  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "20"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
-
+  project: belovr-platform
   source:
     repoURL: oci://registry-1.docker.io/bitnamicharts/postgresql
     targetRevision: "18.1.8"
     path: .
     helm:
+      releaseName: user-db
       valuesObject:
         auth:
           username: user
@@ -21,14 +24,14 @@ spec:
             enabled: true
             size: 2Gi
             storageClass: microk8s-hostpath
-
   destination:
     server: https://kubernetes.default.svc
     namespace: belovr
-
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PruneLast=true

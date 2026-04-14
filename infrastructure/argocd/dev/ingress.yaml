@@ -6,10 +6,13 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+  labels:
+    app.kubernetes.io/part-of: belovr-platform
 spec:
   ingressClassName: nginx
   rules:
-    - http:
+    - host: argocd.192.168.1.12.nip.io
+      http:
         paths:
           - path: /
             pathType: Prefix
@@ -18,7 +21,6 @@ spec:
                 name: argocd-server
                 port:
                   name: http
-      host: argocd.192.168.1.12.nip.io
   tls:
     - hosts:
         - argocd.192.168.1.12.nip.io

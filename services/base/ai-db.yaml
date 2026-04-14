@@ -2,43 +2,33 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: ai-db
-  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "20"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
-
+  project: belovr-platform
   source:
     repoURL: https://qdrant.github.io/qdrant-helm
     chart: qdrant
     targetRevision: "1.16.0"
-
     helm:
       releaseName: ai-db
       valuesObject:
-        # -------------------------------------------------------------------------------------
-        # QDRANT CONFIGURATION
-        # -------------------------------------------------------------------------------------
         config:
           log_level: INFO
           storage:
             on_disk: true
-            storage_path: "/qdrant/storage" # default safe path
+            storage_path: /qdrant/storage
           cluster:
-            enabled: false # Standalone mode for now
+            enabled: false
           snapshots:
             enabled: true
-
-        # -------------------------------------------------------------------------------------
-        # PERSISTENCE
-        # -------------------------------------------------------------------------------------
         primary:
           persistence:
             enabled: true
             size: 5Gi
             storageClass: microk8s-hostpath
-
-        # -------------------------------------------------------------------------------------
-        # SERVICE
-        # -------------------------------------------------------------------------------------
         service:
           type: ClusterIP
           httpPort: 6333
@@ -47,10 +37,6 @@ spec:
           internalPort: 6336
           k8sProbePort: 6337
           debugPort: 6339
-
-        # -------------------------------------------------------------------------------------
-        # RESOURCES (recommended for Qdrant)
-        # -------------------------------------------------------------------------------------
         resources:
           requests:
             cpu: 250m
@@ -58,14 +44,14 @@ spec:
           limits:
             cpu: 2
             memory: 2Gi
-
   destination:
     server: https://kubernetes.default.svc
     namespace: belovr
-
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PruneLast=true

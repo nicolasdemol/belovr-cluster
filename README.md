@@ -1,51 +1,89 @@
-[![slack](https://img.shields.io/badge/slack-argoproj-brightgreen.svg?logo=slack)](https://argoproj.github.io/community/join-slack)
+# belovr-cluster
 
-# Argoproj - Get stuff done with Kubernetes
+Repo GitOps du cluster Belovr, restructuré pour préparer une montée en production sans mélanger le socle partagé, le spécifique dev et le bootstrap Argo CD.
 
-![Argo Image](docs/assets/argo.png)
+## Structure
 
-## What is Argoproj?
+```text
+argocd/
+  bootstrap/        # Root applications a appliquer une seule fois
+  project/          # AppProject Argo CD
+environments/
+  dev/              # Composition complete pour l'environnement de dev
+  prod/             # Composition minimale et safe pour la prod
+infrastructure/
+  namespace/        # Namespace et ressources cluster/shared
+  network/          # TLS, issuer, ingress et proxies
+  dev/              # Hub de dev et service multi-ports
+  argocd/           # Exposition d'Argo CD propre a l'environnement
+services/
+  base/             # Applications Argo CD communes
+  overlays/         # Variantes par environnement
+docs/
+  production-checklist.md
+```
 
-Argoproj is a collection of tools for getting work done with Kubernetes.
+## Principes
 
-- [Argo Workflows](https://github.com/argoproj/argo-workflows) - Container-native Workflow Engine
-- [Argo CD](https://github.com/argoproj/argo-cd) - Declarative GitOps Continuous Delivery
-- [Argo Events](https://github.com/argoproj/argo-events) - Event-based Dependency Manager
-- [Argo Rollouts](https://github.com/argoproj/argo-rollouts) - Progressive Delivery with support for Canary and Blue Green deployment strategies
+- Les `Application` Argo CD vivent dans `services/`.
+- Le socle cluster et reseau vit dans `infrastructure/`.
+- Les points d'entree de bootstrap vivent dans `argocd/bootstrap/`.
+- Les environnements assemblent tout via Kustomize dans `environments/`.
+- Le routage local/developpement est isole du chemin production.
 
-Also [argoproj-labs](https://github.com/argoproj-labs) is a separate GitHub org that we setup for community contributions related to the Argoproj ecosystem. Repos in argoproj-labs are administered by the owners of each project. Please reach out to us on the Argo slack channel if you have a project that you would like to add to the org to make it easier to others in the Argo community to find, use, and contribute back.
+## Bootstrap
 
-## Community Blogs and Presentations
+Une fois Argo CD installe sur le cluster, applique une seule root application selon la cible :
 
-Project specific community blogs and presentations are at
+```bash
+kubectl apply -f argocd/bootstrap/root-dev.yaml
+kubectl apply -f argocd/bootstrap/root-prod.yaml
+```
 
-- [Argo Workflows](https://github.com/argoproj/argo-workflows/blob/master/README.md#community-blogs-and-presentations)
-- [Argo CD](https://github.com/argoproj/argo-cd/blob/master/README.md#community-blogs-and-presentations)
-- [Argo Events](https://github.com/argoproj/argo-events/blob/master/README.md#community-blogs-and-presentations)
-- [Argo Rollouts](https://github.com/argoproj/argo-rollouts/blob/master/README.md#community-blogs-and-presentations)
+Les root apps pointent vers ce repo GitHub :
 
-## Adopters
+- `https://github.com/nicolasdemol/belovr-cluster.git`
 
-Each Argo sub-project maintains its own list of adopters. Those lists are available in the respective project repositories:
+## Environnements
 
-- [Argo Workflows](https://github.com/argoproj/argo-workflows/blob/master/USERS.md)
-- [Argo CD](https://github.com/argoproj/argo-cd/blob/master/USERS.md)
-- [Argo Events](https://github.com/argoproj/argo-events/blob/master/USERS.md)
-- [Argo Rollouts](https://github.com/argoproj/argo-rollouts/blob/master/USERS.md)
+### `dev`
 
-## Contributing
+Inclut :
 
-To learn about how to contribute to Argoproj, see our [contributing documentation](community/CONTRIBUTING.md).
-Argo contributors must follow the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/master/code-of-conduct.md).
+- le namespace `belovr`
+- le `AppProject` Argo CD
+- le wildcard TLS et le `ClusterIssuer`
+- le hub multi-services de dev
+- l'ingress public qui route vers le hub local
+- l'ingress Argo CD en `nip.io`
+- toutes les applications de socle
+- l'exposition RabbitMQ reservee au dev
 
-For help contributing, visit the [#argo-contributors channel](https://cloud-native.slack.com/archives/C020XM04CUW) in CNCF Slack.
+### `prod`
 
-To learn about Argoproj governance, see our [community governance document](community/GOVERNANCE.md).
+Inclut :
 
-## Project Resources
+- le namespace `belovr`
+- le `AppProject` Argo CD
+- le socle TLS partage
+- toutes les applications de socle
 
-- [Argo Community Meeting Calendar](https://calendar.google.com/calendar/embed?src=argoproj@gmail.com)
-  - [ICS file](https://calendar.google.com/calendar/ical/argoproj%40gmail.com/public/basic.ics)
-- Argo GitHub: https://github.com/argoproj
-- Argo website: https://argoproj.github.io
-- Argo Slack: https://argoproj.github.io/community/join-slack
+N'inclut pas volontairement :
+
+- le hub de dev
+- l'ingress public branche sur le proxy local
+- l'ingress Argo CD de dev
+- l'UI RabbitMQ en `nip.io`
+
+## Conventions mises en place
+
+- `sync-wave` explicites pour ordonner le bootstrap.
+- `finalizers` sur les `Application` pour garder un prune propre.
+- overlays par environnement au lieu de manifests a plat.
+- AppProject dedie au scope Belovr.
+
+## Suite logique
+
+Le repo est maintenant propre pour accueillir une vraie couche prod. La check-list a fermer ensuite est ici :
+
+- [docs/production-checklist.md](docs/production-checklist.md)

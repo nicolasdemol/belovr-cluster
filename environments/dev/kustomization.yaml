@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../argocd/project
+  - ../../infrastructure/namespace
+  - ../../infrastructure/network/base
+  - ../../infrastructure/dev
+  - ../../infrastructure/network/dev
+  - ../../infrastructure/argocd/dev
+  - ../../services/overlays/dev

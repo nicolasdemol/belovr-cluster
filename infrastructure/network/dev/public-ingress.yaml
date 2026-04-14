@@ -1,0 +1,146 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: belovr-main-ingress
+  namespace: belovr
+  annotations:
+    argocd.argoproj.io/sync-wave: "20"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://app.belovr.com"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_ssl_verify off;
+      proxy_ssl_server_name on;
+      proxy_set_header Host cdn.belovr.com;
+      proxy_set_header Referer https://app.belovr.com/;
+      proxy_hide_header 'Access-Control-Allow-Origin';
+      add_header 'Access-Control-Allow-Origin' 'https://app.belovr.com' always;
+  labels:
+    app.kubernetes.io/part-of: belovr-platform
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "*.belovr.com"
+        - belovr.com
+      secretName: belovr-app-tls-secret
+  rules:
+    - host: app.belovr.com
+      http:
+        paths:
+          - path: /videos
+            pathType: Prefix
+            backend:
+              service:
+                name: proxy-cdn-belovr
+                port:
+                  number: 443
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: belovr-dev-service
+                port:
+                  number: 3000
+    - host: admin.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: belovr-dev-service
+                port:
+                  number: 3002
+    - host: sso.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: keycloak
+                port:
+                  number: 8080
+    - host: auth.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: belovr-dev-service
+                port:
+                  number: 3001
+    - host: user.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: belovr-dev-service
+                port:
+                  number: 4000
+    - host: content.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: belovr-dev-service
+                port:
+                  number: 4100
+    - host: chat.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: belovr-dev-service
+                port:
+                  number: 4200
+    - host: social.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: belovr-dev-service
+                port:
+                  number: 4300
+    - host: payment.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: belovr-dev-service
+                port:
+                  number: 4400
+    - host: realtime.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: belovr-dev-service
+                port:
+                  number: 4500
+    - host: ia.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: belovr-dev-service
+                port:
+                  number: 8080
