@@ -9,9 +9,9 @@ metadata:
 spec:
   project: belovr-platform
   source:
-    repoURL: oci://registry-1.docker.io/bitnamicharts/postgresql
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: postgresql
     targetRevision: "18.1.8"
-    path: .
     helm:
       releaseName: user-db
       valuesObject:

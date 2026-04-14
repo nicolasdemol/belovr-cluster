@@ -12,8 +12,7 @@ spec:
   sourceRepos:
     - https://github.com/nicolasdemol/belovr-cluster.git
     - https://qdrant.github.io/qdrant-helm
-    - oci://registry-1.docker.io/bitnamicharts/postgresql
-    - oci://registry-1.docker.io/bitnamicharts/redis
+    - https://charts.bitnami.com/bitnami
     - oci://registry-1.docker.io/cloudpirates/keycloak
     - oci://registry-1.docker.io/cloudpirates/rabbitmq
   destinations:

@@ -9,9 +9,9 @@ metadata:
 spec:
   project: belovr-platform
   source:
-    repoURL: oci://registry-1.docker.io/bitnamicharts/redis
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: redis
     targetRevision: "23.2.12"
-    path: .
     helm:
       releaseName: redis
       valuesObject:
