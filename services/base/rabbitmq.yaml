@@ -9,7 +9,7 @@ metadata:
 spec:
   project: belovr-platform
   source:
-    repoURL: oci://registry-1.docker.io/cloudpirates/rabbitmq
+    repoURL: oci://ghcr.io/cloudpirates-io/helm-charts/rabbitmq
     targetRevision: "0.7.8"
     path: .
     helm:

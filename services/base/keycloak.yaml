@@ -9,7 +9,7 @@ metadata:
 spec:
   project: belovr-platform
   source:
-    repoURL: oci://registry-1.docker.io/cloudpirates/keycloak
+    repoURL: oci://ghcr.io/cloudpirates-io/helm-charts/keycloak
     targetRevision: "0.8.7"
     path: .
     helm:
