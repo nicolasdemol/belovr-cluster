@@ -17,6 +17,8 @@ spec:
       releaseName: kube-prometheus-stack
       valuesObject:
         fullnameOverride: kube-prometheus-stack
+        crds:
+          enabled: false
         grafana:
           enabled: true
           adminUser: admin
