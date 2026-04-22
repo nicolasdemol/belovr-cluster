@@ -4,4 +4,5 @@ resources:
   - ../../argocd/project
   - ../../infrastructure/namespace
   - ../../infrastructure/network/base
+  - ../../infrastructure/observability/base
   - ../../services/overlays/prod

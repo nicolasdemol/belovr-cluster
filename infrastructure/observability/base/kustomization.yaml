@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - kube-prometheus-stack.yaml
+  - loki.yaml
+  - otel-collector-gateway.yaml
+  - otel-collector-agent.yaml
+  - dashboards/overview-dashboard.yaml
+  - dashboards/payments-dashboard.yaml
+  - dashboards/auth-dashboard.yaml
+  - dashboards/chat-dashboard.yaml
+  - dashboards/cluster-slo-dashboard.yaml
+labels:
+  - pairs:
+      app.kubernetes.io/managed-by: argocd
+      app.kubernetes.io/part-of: belovr-platform
+      belovr.io/tier: observability

@@ -1,0 +1,194 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: belovr-platform
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: "83.6.0"
+    helm:
+      releaseName: kube-prometheus-stack
+      valuesObject:
+        fullnameOverride: kube-prometheus-stack
+        grafana:
+          enabled: true
+          adminUser: admin
+          adminPassword: adminpass
+          defaultDashboardsTimezone: Europe/Paris
+          sidecar:
+            dashboards:
+              enabled: true
+              label: grafana_dashboard
+              labelValue: "1"
+              searchNamespace: ALL
+              folderAnnotation: grafana_folder
+              provider:
+                allowUiUpdates: true
+            datasources:
+              enabled: true
+              defaultDatasourceEnabled: true
+          additionalDataSources:
+            - name: Loki
+              type: loki
+              access: proxy
+              url: http://loki-gateway.observability.svc.cluster.local
+              isDefault: false
+              jsonData:
+                maxLines: 1000
+                timeout: 60
+          service:
+            type: ClusterIP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 768Mi
+        alertmanager:
+          alertmanagerSpec:
+            storage:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: microk8s-hostpath
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 2Gi
+        prometheus:
+          prometheusSpec:
+            retention: 15d
+            serviceMonitorSelectorNilUsesHelmValues: false
+            podMonitorSelectorNilUsesHelmValues: false
+            probeSelectorNilUsesHelmValues: false
+            ruleSelectorNilUsesHelmValues: false
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: microk8s-hostpath
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 10Gi
+            additionalScrapeConfigs:
+              - job_name: belovr-annotated-services
+                kubernetes_sd_configs:
+                  - role: endpoints
+                    namespaces:
+                      names:
+                        - belovr
+                relabel_configs:
+                  - source_labels:
+                      - __meta_kubernetes_service_annotation_prometheus_io_scrape
+                    action: keep
+                    regex: "true"
+                  - source_labels:
+                      - __meta_kubernetes_service_annotation_prometheus_io_scheme
+                    action: replace
+                    target_label: __scheme__
+                    regex: (https?)
+                  - source_labels:
+                      - __meta_kubernetes_service_annotation_prometheus_io_path
+                    action: replace
+                    target_label: __metrics_path__
+                    regex: (.+)
+                  - source_labels:
+                      - __address__
+                      - __meta_kubernetes_service_annotation_prometheus_io_port
+                    action: replace
+                    target_label: __address__
+                    regex: ([^:]+)(?::\d+)?;(\d+)
+                    replacement: $1:$2
+                  - source_labels:
+                      - __meta_kubernetes_namespace
+                    action: replace
+                    target_label: namespace
+                  - source_labels:
+                      - __meta_kubernetes_service_name
+                    action: replace
+                    target_label: service
+                  - source_labels:
+                      - __meta_kubernetes_pod_name
+                    action: replace
+                    target_label: pod
+                  - action: labelmap
+                    regex: __meta_kubernetes_service_label_(.+)
+        kube-state-metrics:
+          metricLabelsAllowlist:
+            - pods=[app.kubernetes.io/name,app.kubernetes.io/instance,app.kubernetes.io/component]
+            - deployments=[app.kubernetes.io/name,app.kubernetes.io/instance,app.kubernetes.io/component]
+        additionalPrometheusRulesMap:
+          belovr-critical-alerts:
+            groups:
+              - name: belovr.critical
+                rules:
+                  - alert: BelovrDeploymentUnavailable
+                    expr: kube_deployment_spec_replicas{namespace="belovr"} > 0 and kube_deployment_status_replicas_available{namespace="belovr"} < kube_deployment_spec_replicas{namespace="belovr"}
+                    for: 5m
+                    labels:
+                      severity: critical
+                      team: platform
+                    annotations:
+                      summary: "Deployment Belovr indisponible"
+                      description: "Le deployment {{ $labels.deployment }} n'a pas tous ses replicas disponibles depuis plus de 5 minutes."
+                      runbook_url: "https://github.com/nicolasdemol/belovr-cluster/blob/main/docs/observability-runbook.md#deployment-indisponible"
+                  - alert: PaymentNotCredited
+                    expr: increase(belovr_payment_credit_failures_total[10m]) > 0 or (sum(increase(belovr_payment_paid_total[15m])) - sum(increase(belovr_payment_credited_total[15m]))) > 0
+                    for: 5m
+                    labels:
+                      severity: critical
+                      team: payments
+                    annotations:
+                      summary: "Paiement non credite"
+                      description: "Un paiement valide n'a pas ete credite ou le compteur d'echec de credit a augmente."
+                      runbook_url: "https://github.com/nicolasdemol/belovr-cluster/blob/main/docs/observability-runbook.md#paiement-non-credite"
+                  - alert: InvalidTokenCascade
+                    expr: sum by (service) (rate(http_requests_total{namespace="belovr",status_code=~"401|403"}[5m])) > 5
+                    for: 5m
+                    labels:
+                      severity: critical
+                      team: identity
+                    annotations:
+                      summary: "Tokens invalides en cascade"
+                      description: "Le service {{ $labels.service }} retourne plus de 5 erreurs 401/403 par seconde depuis 5 minutes."
+                      runbook_url: "https://github.com/nicolasdemol/belovr-cluster/blob/main/docs/observability-runbook.md#token-invalide-en-cascade"
+                  - alert: ChatBroadcastFailure
+                    expr: increase(belovr_chat_broadcast_failures_total[5m]) > 0
+                    for: 2m
+                    labels:
+                      severity: critical
+                      team: chat
+                    annotations:
+                      summary: "Message chat non diffuse"
+                      description: "Le compteur d'echec de diffusion chat a augmente dans les 5 dernieres minutes."
+                      runbook_url: "https://github.com/nicolasdemol/belovr-cluster/blob/main/docs/observability-runbook.md#message-chat-non-diffuse"
+                  - alert: RabbitMqBacklogCritical
+                    expr: sum by (queue) (rabbitmq_queue_messages_ready{namespace="belovr"}) > 1000
+                    for: 10m
+                    labels:
+                      severity: critical
+                      team: platform
+                    annotations:
+                      summary: "Backlog RabbitMQ critique"
+                      description: "La queue {{ $labels.queue }} a plus de 1000 messages en attente depuis 10 minutes."
+                      runbook_url: "https://github.com/nicolasdemol/belovr-cluster/blob/main/docs/observability-runbook.md#backlog-rabbitmq"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: observability
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PruneLast=true

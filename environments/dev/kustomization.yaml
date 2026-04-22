@@ -7,4 +7,5 @@ resources:
   - ../../infrastructure/dev
   - ../../infrastructure/network/dev
   - ../../infrastructure/argocd/dev
+  - ../../infrastructure/observability/base
   - ../../services/overlays/dev

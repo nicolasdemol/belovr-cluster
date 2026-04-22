@@ -14,6 +14,7 @@ environments/
 infrastructure/
   namespace/        # Namespace et ressources cluster/shared
   network/          # TLS, issuer, ingress et proxies
+  observability/    # Prometheus, Loki, Grafana, OpenTelemetry Collector
   dev/              # Hub de dev et service multi-ports
   argocd/           # Exposition d'Argo CD propre a l'environnement
 services/
@@ -21,6 +22,8 @@ services/
   overlays/         # Variantes par environnement
 docs/
   production-checklist.md
+  nest-observability.md
+  observability-runbook.md
 ```
 
 ## Principes
@@ -56,6 +59,7 @@ Inclut :
 - le hub multi-services de dev
 - l'ingress public qui route vers le hub local
 - l'ingress Argo CD en `nip.io`
+- la stack observability Prometheus/Loki/Grafana/Otel
 - toutes les applications de socle
 - l'exposition RabbitMQ reservee au dev
 
@@ -66,6 +70,7 @@ Inclut :
 - le namespace `belovr`
 - le `AppProject` Argo CD
 - le socle TLS partage
+- la stack observability Prometheus/Loki/Grafana/Otel
 - toutes les applications de socle
 
 N'inclut pas volontairement :
@@ -87,3 +92,5 @@ N'inclut pas volontairement :
 Le repo est maintenant propre pour accueillir une vraie couche prod. La check-list a fermer ensuite est ici :
 
 - [docs/production-checklist.md](docs/production-checklist.md)
+- [docs/nest-observability.md](docs/nest-observability.md)
+- [docs/observability-runbook.md](docs/observability-runbook.md)

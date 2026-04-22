@@ -32,8 +32,10 @@ Ce repo est maintenant structure pour la prod, mais il reste quelques verrous av
 
 ## 6. Observabilite
 
-- Brancher logs, metriques et alerting.
-- Ajouter des dashboards et des alertes pour les services stateful.
+- Verifier la stack `kube-prometheus-stack`, `loki` et `otel-collector`.
+- Integrer le contrat applicatif de [nest-observability.md](nest-observability.md).
+- Remplacer le password Grafana hardcode par un secret gere hors Git.
+- Valider les dashboards et alertes avec [observability-runbook.md](observability-runbook.md).
 
 ## 7. Exploitation
 

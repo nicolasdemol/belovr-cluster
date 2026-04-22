@@ -1,0 +1,173 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: otel-collector-agent
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "31"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: belovr-platform
+  source:
+    repoURL: https://open-telemetry.github.io/opentelemetry-helm-charts
+    chart: opentelemetry-collector
+    targetRevision: "0.150.1"
+    helm:
+      releaseName: otel-collector-agent
+      valuesObject:
+        fullnameOverride: otel-collector-agent
+        mode: daemonset
+        image:
+          repository: otel/opentelemetry-collector-contrib
+        presets:
+          kubernetesAttributes:
+            enabled: true
+        ports:
+          otlp:
+            enabled: false
+          otlp-http:
+            enabled: false
+          jaeger-compact:
+            enabled: false
+          jaeger-thrift:
+            enabled: false
+          jaeger-grpc:
+            enabled: false
+          zipkin:
+            enabled: false
+          metrics:
+            enabled: true
+            containerPort: 8888
+            servicePort: 8888
+            protocol: TCP
+        service:
+          enabled: true
+        serviceMonitor:
+          enabled: true
+          metricsEndpoints:
+            - port: metrics
+        extraVolumes:
+          - name: varlogpods
+            hostPath:
+              path: /var/log/pods
+          - name: varlogcontainers
+            hostPath:
+              path: /var/log/containers
+          - name: varlibdockercontainers
+            hostPath:
+              path: /var/lib/docker/containers
+        extraVolumeMounts:
+          - name: varlogpods
+            mountPath: /var/log/pods
+            readOnly: true
+          - name: varlogcontainers
+            mountPath: /var/log/containers
+            readOnly: true
+          - name: varlibdockercontainers
+            mountPath: /var/lib/docker/containers
+            readOnly: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 768Mi
+        alternateConfig:
+          extensions:
+            health_check:
+              endpoint: ${env:MY_POD_IP}:13133
+          receivers:
+            filelog:
+              include:
+                - /var/log/pods/*/*/*.log
+              exclude:
+                - /var/log/pods/observability_otel-collector-agent-*/*/*.log
+              start_at: end
+              include_file_path: true
+              include_file_name: false
+              operators:
+                - type: container
+                - type: json_parser
+                  parse_from: body
+                  parse_to: attributes
+                  if: body matches "^\\{.*\\}$"
+                  on_error: send
+                - type: move
+                  from: attributes.message
+                  to: body
+                  if: attributes.message != nil
+          processors:
+            memory_limiter:
+              check_interval: 5s
+              limit_percentage: 80
+              spike_limit_percentage: 25
+            k8sattributes:
+              auth_type: serviceAccount
+              passthrough: false
+              extract:
+                metadata:
+                  - k8s.namespace.name
+                  - k8s.pod.name
+                  - k8s.pod.uid
+                  - k8s.deployment.name
+                  - k8s.node.name
+              pod_association:
+                - sources:
+                    - from: resource_attribute
+                      name: k8s.pod.uid
+                - sources:
+                    - from: resource_attribute
+                      name: k8s.pod.name
+                    - from: resource_attribute
+                      name: k8s.namespace.name
+            resource/belovr:
+              attributes:
+                - key: cluster
+                  value: belovr
+                  action: upsert
+            transform/logs:
+              error_mode: ignore
+              log_statements:
+                - context: log
+                  statements:
+                    - set(resource.attributes["service.name"], attributes["service"]) where resource.attributes["service.name"] == nil and attributes["service"] != nil
+                    - set(severity_text, attributes["level"]) where severity_text == nil and attributes["level"] != nil
+                    - set(attributes["request_id"], attributes["requestId"]) where attributes["request_id"] == nil and attributes["requestId"] != nil
+            batch:
+              timeout: 5s
+              send_batch_size: 1024
+          exporters:
+            otlp/gateway:
+              endpoint: otel-collector-gateway.observability.svc.cluster.local:4317
+              tls:
+                insecure: true
+            debug:
+              verbosity: basic
+          service:
+            extensions:
+              - health_check
+            pipelines:
+              logs:
+                receivers:
+                  - filelog
+                processors:
+                  - memory_limiter
+                  - k8sattributes
+                  - resource/belovr
+                  - transform/logs
+                  - batch
+                exporters:
+                  - otlp/gateway
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: observability
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PruneLast=true
