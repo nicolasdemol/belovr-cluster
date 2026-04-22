@@ -199,4 +199,5 @@ spec:
       - CreateNamespace=true
       - ApplyOutOfSyncOnly=true
       - SkipDryRunOnMissingResource=true
+      - ServerSideApply=true
       - PruneLast=true
