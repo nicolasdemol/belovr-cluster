@@ -3,3 +3,5 @@ kind: Kustomization
 resources:
   - external-services.yaml
   - public-ingress.yaml
+  - certificate-argocd.yaml
+  - certificate-observability.yaml

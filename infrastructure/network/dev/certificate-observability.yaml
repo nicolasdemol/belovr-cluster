@@ -1,19 +1,17 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: belovr-wildcard-tls
-  namespace: belovr
+  name: lab-wildcard-tls
+  namespace: observability
   annotations:
     argocd.argoproj.io/sync-wave: "5"
   labels:
     app.kubernetes.io/part-of: belovr-platform
 spec:
-  secretName: belovr-app-tls-secret
+  secretName: lab-tls-secret
   issuerRef:
     name: letsencrypt-dns-issuer
     kind: ClusterIssuer
-  commonName: "*.belovr.com"
+  commonName: "*.lab.belovr.com"
   dnsNames:
-    - "*.belovr.com"
-    - belovr.com
     - "*.lab.belovr.com"
