@@ -14,7 +14,7 @@ spec:
     - https://qdrant.github.io/qdrant-helm
     - https://charts.bitnami.com/bitnami
     - https://prometheus-community.github.io/helm-charts
-    - https://grafana-community.github.io/helm-charts
+    - https://grafana.github.io/helm-charts
     - https://open-telemetry.github.io/opentelemetry-helm-charts
     - oci://ghcr.io/cloudpirates-io/helm-charts/keycloak
     - oci://ghcr.io/cloudpirates-io/helm-charts/rabbitmq

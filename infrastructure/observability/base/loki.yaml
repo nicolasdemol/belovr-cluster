@@ -10,7 +10,7 @@ metadata:
 spec:
   project: belovr-platform
   source:
-    repoURL: https://grafana-community.github.io/helm-charts
+    repoURL: https://grafana.github.io/helm-charts
     chart: loki
     targetRevision: "6.57.0"
     helm:
