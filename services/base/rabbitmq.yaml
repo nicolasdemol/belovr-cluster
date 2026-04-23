@@ -15,6 +15,13 @@ spec:
     helm:
       releaseName: rabbitmq
       valuesObject:
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
         auth:
           enabled: true
           username: rabbitmq

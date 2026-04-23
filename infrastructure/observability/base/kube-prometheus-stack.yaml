@@ -80,7 +80,14 @@ spec:
                       storage: 2Gi
         prometheus:
           prometheusSpec:
-            retention: 15d
+            retention: 7d
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                cpu: 500m
+                memory: 768Mi
             serviceMonitorSelectorNilUsesHelmValues: false
             podMonitorSelectorNilUsesHelmValues: false
             probeSelectorNilUsesHelmValues: false
