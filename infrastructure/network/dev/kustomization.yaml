@@ -5,3 +5,4 @@ resources:
   - public-ingress.yaml
   - certificate-argocd.yaml
   - certificate-observability.yaml
+  - ingress-otel.yaml
