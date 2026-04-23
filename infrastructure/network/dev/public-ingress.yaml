@@ -10,13 +10,6 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-origin: "https://app.belovr.com"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: "100m"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      proxy_ssl_verify off;
-      proxy_ssl_server_name on;
-      proxy_set_header Host cdn.belovr.com;
-      proxy_set_header Referer https://app.belovr.com/;
-      proxy_hide_header 'Access-Control-Allow-Origin';
-      add_header 'Access-Control-Allow-Origin' 'https://app.belovr.com' always;
   labels:
     app.kubernetes.io/part-of: belovr-platform
 spec:
@@ -30,13 +23,6 @@ spec:
     - host: app.belovr.com
       http:
         paths:
-          - path: /videos
-            pathType: Prefix
-            backend:
-              service:
-                name: proxy-cdn-belovr
-                port:
-                  number: 443
           - path: /
             pathType: Prefix
             backend:

@@ -61,6 +61,8 @@ spec:
           enabled: false
         test:
           enabled: false
+        lokiCanary:
+          enabled: false
         monitoring:
           serviceMonitor:
             enabled: true
