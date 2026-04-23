@@ -11,6 +11,12 @@ resources:
   - dashboards/auth-dashboard.yaml
   - dashboards/chat-dashboard.yaml
   - dashboards/cluster-slo-dashboard.yaml
+  - dashboards/user-dashboard.yaml
+  - dashboards/video-dashboard.yaml
+  - dashboards/image-dashboard.yaml
+  - dashboards/social-dashboard.yaml
+  - dashboards/content-dashboard.yaml
+  - dashboards/realtime-dashboard.yaml
 labels:
   - pairs:
       app.kubernetes.io/managed-by: argocd
