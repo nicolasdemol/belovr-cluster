@@ -1,0 +1,322 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: belovr-dashboard-realtime
+  namespace: observability
+  annotations:
+    grafana_folder: Belovr
+    argocd.argoproj.io/sync-wave: "40"
+  labels:
+    grafana_dashboard: "1"
+data:
+  belovr-realtime.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+          }
+        ]
+      },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "links": [],
+      "panels": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki}" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 1 },
+                  { "color": "red", "value": 10 }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+          "id": 1,
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "orientation": "auto",
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "expr": "sum(count_over_time({service_name=\"realtime\"} | level=~\"error|fatal\" [$__range]))",
+              "instant": true,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Erreurs",
+          "type": "stat"
+        },
+        {
+          "datasource": { "type": "loki", "uid": "${loki}" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 5 }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+          "id": 2,
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "orientation": "auto",
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "expr": "sum(count_over_time({service_name=\"realtime\"} | level=\"warn\" [$__range]))",
+              "instant": true,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Warnings",
+          "type": "stat"
+        },
+        {
+          "datasource": { "type": "loki", "uid": "${loki}" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "fixed", "fixedColor": "blue" },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+          "id": 3,
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "orientation": "auto",
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "expr": "sum(count_over_time({service_name=\"realtime\"} [$__range]))",
+              "instant": true,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Total logs",
+          "type": "stat"
+        },
+        {
+          "datasource": { "type": "loki", "uid": "${loki}" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "red", "value": 1 }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+          "id": 4,
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "orientation": "auto",
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "expr": "sum(count_over_time({service_name=\"realtime\"} | level=\"fatal\" [$__range]))",
+              "instant": true,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Fatal",
+          "type": "stat"
+        },
+        {
+          "datasource": { "type": "loki", "uid": "${loki}" },
+          "fieldConfig": {
+            "defaults": { "unit": "short" },
+            "overrides": [
+              { "matcher": { "id": "byName", "options": "error" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } }] },
+              { "matcher": { "id": "byName", "options": "fatal" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "dark-red" } }] },
+              { "matcher": { "id": "byName", "options": "warn" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } }] },
+              { "matcher": { "id": "byName", "options": "info" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "blue" } }] },
+              { "matcher": { "id": "byName", "options": "debug" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "gray" } }] }
+            ]
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+          "id": 5,
+          "options": {
+            "legend": { "displayMode": "table", "placement": "bottom", "showLegend": true },
+            "tooltip": { "mode": "multi", "sort": "none" }
+          },
+          "targets": [
+            {
+              "expr": "sum by (level) (rate({service_name=\"realtime\"}[5m]))",
+              "legendFormat": "{{level}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Volume de logs par niveau",
+          "type": "timeseries"
+        },
+        {
+          "datasource": { "type": "loki", "uid": "${loki}" },
+          "fieldConfig": {
+            "defaults": { "unit": "short" },
+            "overrides": []
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+          "id": 6,
+          "options": {
+            "legend": { "displayMode": "table", "placement": "bottom", "showLegend": true },
+            "tooltip": { "mode": "multi", "sort": "none" }
+          },
+          "targets": [
+            {
+              "expr": "sum(count_over_time({service_name=\"realtime\"} |~ \"connect\" [5m]))",
+              "legendFormat": "connexions",
+              "refId": "A"
+            },
+            {
+              "expr": "sum(count_over_time({service_name=\"realtime\"} |~ \"disconnect\" [5m]))",
+              "legendFormat": "deconnexions",
+              "refId": "B"
+            }
+          ],
+          "title": "Connexions WebSocket",
+          "type": "timeseries"
+        },
+        {
+          "datasource": { "type": "loki", "uid": "${loki}" },
+          "gridPos": { "h": 10, "w": 12, "x": 0, "y": 12 },
+          "id": 7,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": true,
+            "showCommonLabels": false,
+            "showLabels": true,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "wrapLogMessage": true
+          },
+          "targets": [
+            {
+              "expr": "{service_name=\"realtime\"} | level=~\"error|fatal\"",
+              "refId": "A"
+            }
+          ],
+          "title": "Erreurs / Fatals",
+          "type": "logs"
+        },
+        {
+          "datasource": { "type": "loki", "uid": "${loki}" },
+          "gridPos": { "h": 10, "w": 12, "x": 12, "y": 12 },
+          "id": 8,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": true,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "wrapLogMessage": true
+          },
+          "targets": [
+            {
+              "expr": "{service_name=\"realtime\"} |~ \"connect|disconnect|subscribe\"",
+              "refId": "A"
+            }
+          ],
+          "title": "Evenements de connexion",
+          "type": "logs"
+        },
+        {
+          "datasource": { "type": "loki", "uid": "${loki}" },
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 22 },
+          "id": 9,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": true,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "wrapLogMessage": true
+          },
+          "targets": [
+            {
+              "expr": "{service_name=\"realtime\"}",
+              "refId": "A"
+            }
+          ],
+          "title": "Tous les logs",
+          "type": "logs"
+        }
+      ],
+      "refresh": "30s",
+      "schemaVersion": 39,
+      "tags": ["belovr", "realtime"],
+      "templating": {
+        "list": [
+          {
+            "current": { "text": "Prometheus", "value": "Prometheus" },
+            "name": "datasource",
+            "query": "prometheus",
+            "refresh": 1,
+            "type": "datasource"
+          },
+          {
+            "current": { "text": "Loki", "value": "Loki" },
+            "name": "loki",
+            "query": "loki",
+            "refresh": 1,
+            "type": "datasource"
+          }
+        ]
+      },
+      "time": { "from": "now-6h", "to": "now" },
+      "timezone": "browser",
+      "title": "Belovr - Realtime",
+      "uid": "belovr-realtime",
+      "version": 1,
+      "weekStart": ""
+    }
