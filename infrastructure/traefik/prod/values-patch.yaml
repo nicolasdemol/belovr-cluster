@@ -1,0 +1,9 @@
+# Production override for the single-node OVH cluster.
+# Traefik already exposes ports 80 and 443 through hostPort, so it does not
+# need to copy the status of a LoadBalancer Service without an external IP.
+providers:
+  kubernetesIngress:
+    publishedService:
+      enabled: false
+    ingressEndpoint:
+      ip: "137.74.174.36"

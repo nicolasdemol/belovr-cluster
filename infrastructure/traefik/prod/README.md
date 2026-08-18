@@ -1,0 +1,26 @@
+# Traefik production override
+
+This override makes Traefik publish the OVH VPS address in
+`status.loadBalancer.ingress` for Kubernetes Ingress resources.
+
+Apply it to the existing Helm release while preserving all other release
+values:
+
+```powershell
+helm repo add traefik https://traefik.github.io/charts
+helm repo update
+
+helm upgrade traefik traefik/traefik `
+  --namespace ingress `
+  --version 37.4.0 `
+  --reuse-values `
+  --values infrastructure/traefik/prod/values-patch.yaml
+```
+
+Verify that Traefik advertises the production IP:
+
+```powershell
+kubectl get ingress -A -w
+```
+
+The `ADDRESS` column should become `137.74.174.36`.
