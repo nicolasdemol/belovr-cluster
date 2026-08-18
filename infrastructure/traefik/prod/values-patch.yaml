@@ -5,8 +5,11 @@ providers:
   kubernetesIngress:
     publishedService:
       enabled: false
-    ingressEndpoint:
-      ip: "137.74.174.36"
+
+# Chart 37.4.0 does not expose ingressEndpoint.ip as a rendered value yet.
+# Pass the supported Traefik static option directly.
+additionalArguments:
+  - "--providers.kubernetesingress.ingressendpoint.ip=137.74.174.36"
 
 # A single node cannot schedule a surge pod while the current Traefik pod owns
 # host ports 80 and 443. Replace the pod sequentially instead.

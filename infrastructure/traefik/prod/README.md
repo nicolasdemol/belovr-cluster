@@ -5,6 +5,10 @@ This override makes Traefik publish the OVH VPS address in
 single-node-safe rolling update because the Traefik pod reserves host ports 80
 and 443.
 
+The chart is pinned to `37.4.0`. For that version, the advertised IP is passed
+through `additionalArguments` because the chart does not render
+`providers.kubernetesIngress.ingressEndpoint.ip` yet.
+
 Apply it to the existing Helm release while preserving all other release
 values:
 
