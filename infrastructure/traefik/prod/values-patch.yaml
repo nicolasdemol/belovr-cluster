@@ -7,3 +7,11 @@ providers:
       enabled: false
     ingressEndpoint:
       ip: "137.74.174.36"
+
+# A single node cannot schedule a surge pod while the current Traefik pod owns
+# host ports 80 and 443. Replace the pod sequentially instead.
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 0
+    maxUnavailable: 1

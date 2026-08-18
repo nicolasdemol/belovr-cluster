@@ -1,7 +1,9 @@
 # Traefik production override
 
 This override makes Traefik publish the OVH VPS address in
-`status.loadBalancer.ingress` for Kubernetes Ingress resources.
+`status.loadBalancer.ingress` for Kubernetes Ingress resources. It also uses a
+single-node-safe rolling update because the Traefik pod reserves host ports 80
+and 443.
 
 Apply it to the existing Helm release while preserving all other release
 values:
