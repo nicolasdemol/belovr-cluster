@@ -1,4 +1,7 @@
 # Shared Traefik configuration for dev and prod-like clusters.
+deployment:
+  kind: DaemonSet
+
 providers:
   kubernetesCRD:
     enabled: true
@@ -6,6 +9,17 @@ providers:
     enabled: true
     publishedService:
       enabled: false
+  # Do not keep compatibility providers inherited from the MicroK8s addon.
+  kubernetesIngressNginx:
+    enabled: false
+  kubernetesGateway:
+    enabled: false
+
+gateway:
+  enabled: false
+
+gatewayClass:
+  enabled: false
 
 ingressClass:
   enabled: true
@@ -30,3 +44,11 @@ updateStrategy:
   rollingUpdate:
     maxSurge: 0
     maxUnavailable: 1
+
+# Public traffic reaches the DaemonSet through hostPort; no external
+# LoadBalancer implementation is available on these single-node VPS clusters.
+service:
+  type: ClusterIP
+
+# Explicitly clear IngressClasses and other objects inherited from the addon.
+extraObjects: []
