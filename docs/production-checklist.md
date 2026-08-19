@@ -15,8 +15,8 @@ Ce repo est maintenant structure pour la prod, mais il reste quelques verrous av
 
 ## 3. Ingress production
 
-- Ajouter un ingress prod qui route vers les vrais services applicatifs, pas vers le hub de dev.
-- Definir les noms DNS finaux et la politique de certificats associee.
+- Remplacer les backends temporaires `belovr-dev-service` par les vrais Services applicatifs.
+- Valider les noms DNS finaux et la politique de certificats associee.
 
 ## 4. Donnees stateful
 

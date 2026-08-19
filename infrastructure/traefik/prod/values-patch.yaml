@@ -1,42 +1,5 @@
-# Production override for the single-node OVH cluster.
-# Traefik already exposes ports 80 and 443 through hostPort, so it does not
-# need to copy the status of a LoadBalancer Service without an external IP.
-providers:
-  kubernetesCRD:
-    enabled: true
-  kubernetesIngress:
-    enabled: true
-    publishedService:
-      enabled: false
-
-# Keep Traefik as the sole and default Kubernetes Ingress controller.
-ingressClass:
-  enabled: true
-  isDefaultClass: true
-  name: traefik
-
-# Bind the public ports directly on the single node. HTTPS redirection belongs
-# to Traefik itself, so individual Ingress resources only select websecure.
-ports:
-  web:
-    hostPort: 80
-    redirections:
-      entryPoint:
-        to: websecure
-        scheme: https
-        permanent: true
-  websecure:
-    hostPort: 443
-
-# Chart 37.4.0 does not expose ingressEndpoint.ip as a rendered value yet.
-# Pass the supported Traefik static option directly.
+# Prod-like OVH VPS override. All other settings live in ../base/values.yaml.
+# Chart 37.4.0 does not render ingressEndpoint.ip as a value, so the public
+# address is passed through the supported Traefik static option.
 additionalArguments:
   - "--providers.kubernetesingress.ingressendpoint.ip=137.74.174.36"
-
-# A single node cannot schedule a surge pod while the current Traefik pod owns
-# host ports 80 and 443. Replace the pod sequentially instead.
-updateStrategy:
-  type: RollingUpdate
-  rollingUpdate:
-    maxSurge: 0
-    maxUnavailable: 1

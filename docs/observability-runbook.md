@@ -6,6 +6,8 @@ La stack est incluse dans `environments/dev` et `environments/prod`.
 
 ```bash
 kubectl apply -f argocd/bootstrap/root-dev.yaml
+# ou, pour la préproduction nommée prod :
+kubectl apply -f argocd/bootstrap/root-prod.yaml
 kubectl -n argocd get applications
 ```
 

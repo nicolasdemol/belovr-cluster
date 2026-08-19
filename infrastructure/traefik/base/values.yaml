@@ -1,0 +1,32 @@
+# Shared Traefik configuration for dev and prod-like clusters.
+providers:
+  kubernetesCRD:
+    enabled: true
+  kubernetesIngress:
+    enabled: true
+    publishedService:
+      enabled: false
+
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+  name: traefik
+
+# Both environments use a single node and bind public ports directly.
+ports:
+  web:
+    hostPort: 80
+    redirections:
+      entryPoint:
+        to: websecure
+        scheme: https
+        permanent: true
+  websecure:
+    hostPort: 443
+
+# A surge pod cannot bind the same host ports on a single node.
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 0
+    maxUnavailable: 1
