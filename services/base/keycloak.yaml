@@ -15,6 +15,19 @@ spec:
     helm:
       releaseName: keycloak
       valuesObject:
+        extraInitContainers:
+          - name: add-keycloakify-theme
+            image: corsaire300iq/custom-theme-keycloak:latest
+            imagePullPolicy: Always
+            command:
+              - sh
+              - -c
+              - |
+                echo "Installation du JAR Keycloakify..."
+                cp /opt/keycloak/providers/*.jar /target/providers/
+            volumeMounts:
+              - name: keycloak-providers
+                mountPath: /target/providers
         preserveThemes: true
         preserveProviders: false
         resources:
