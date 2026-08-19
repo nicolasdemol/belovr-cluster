@@ -2,6 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - external-services.yaml
+  - middleware-belovr.yaml
+  - middleware-otel.yaml
   - public-ingress.yaml
   - certificate-argocd.yaml
   - certificate-observability.yaml

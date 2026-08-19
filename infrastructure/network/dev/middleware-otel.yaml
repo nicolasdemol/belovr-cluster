@@ -1,0 +1,12 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: otel-upload-10m
+  namespace: observability
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"
+  labels:
+    app.kubernetes.io/part-of: belovr-platform
+spec:
+  buffering:
+    maxRequestBodyBytes: 10485760

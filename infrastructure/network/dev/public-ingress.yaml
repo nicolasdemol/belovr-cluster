@@ -4,16 +4,13 @@ metadata:
   name: belovr-main-ingress
   namespace: belovr
   annotations:
-    argocd.argoproj.io/sync-wave: "20"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/cors-allow-origin: "https://app.belovr.com"
-    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    argocd.argoproj.io/sync-wave: "40"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.middlewares: belovr-belovr-cors@kubernetescrd,belovr-belovr-upload-100m@kubernetescrd
   labels:
     app.kubernetes.io/part-of: belovr-platform
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   tls:
     - hosts:
         - "*.belovr.com"

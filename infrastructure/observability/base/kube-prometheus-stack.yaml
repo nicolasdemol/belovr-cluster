@@ -48,10 +48,9 @@ spec:
                 timeout: 60
           ingress:
             enabled: true
-            ingressClassName: nginx
+            ingressClassName: traefik
             annotations:
-              nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-              nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+              traefik.ingress.kubernetes.io/router.entrypoints: websecure
             hosts:
               - grafana.lab.belovr.com
             tls:

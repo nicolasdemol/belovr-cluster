@@ -8,7 +8,7 @@ spec:
       valuesObject:
         ingress:
           enabled: true
-          className: nginx
+          className: traefik
           hosts:
             - host: rabbitmq.lab.belovr.com
               paths:
@@ -19,5 +19,4 @@ spec:
                 - rabbitmq.lab.belovr.com
               secretName: belovr-app-tls-secret
           annotations:
-            nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-            nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure

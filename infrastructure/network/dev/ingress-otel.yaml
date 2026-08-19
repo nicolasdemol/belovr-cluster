@@ -4,14 +4,13 @@ metadata:
   name: otel-gateway-ingress
   namespace: observability
   annotations:
-    argocd.argoproj.io/sync-wave: "10"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    argocd.argoproj.io/sync-wave: "40"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.middlewares: observability-otel-upload-10m@kubernetescrd
   labels:
     app.kubernetes.io/part-of: belovr-platform
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
     - host: otel.lab.belovr.com
       http:
