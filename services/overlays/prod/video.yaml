@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video
+  namespace: belovr
+  annotations:
+    argocd.argoproj.io/sync-wave: "40"
+  labels:
+    app.kubernetes.io/name: video
+    app.kubernetes.io/instance: video
+    app.kubernetes.io/component: microservice
+    app.kubernetes.io/part-of: belovr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: video
+      app.kubernetes.io/instance: video
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: video
+        app.kubernetes.io/instance: video
+        app.kubernetes.io/component: microservice
+        app.kubernetes.io/part-of: belovr
+    spec:
+      imagePullSecrets:
+        - name: ghcr-pull
+      containers:
+        - name: video
+          image: ghcr.io/nicolasdemol/video:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 4700
+              protocol: TCP
