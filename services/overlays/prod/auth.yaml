@@ -30,6 +30,13 @@ spec:
         - name: auth
           image: ghcr.io/nicolasdemol/auth:latest
           imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: belovr-common-config
+            - configMapRef:
+                name: auth-config
+            - secretRef:
+                name: auth-secrets
           ports:
             - name: http
               containerPort: 3001

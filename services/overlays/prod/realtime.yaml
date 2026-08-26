@@ -30,6 +30,13 @@ spec:
         - name: realtime
           image: ghcr.io/nicolasdemol/realtime:latest
           imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: belovr-common-config
+            - configMapRef:
+                name: realtime-config
+            - secretRef:
+                name: realtime-secrets
           ports:
             - name: http
               containerPort: 4500

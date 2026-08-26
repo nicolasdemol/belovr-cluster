@@ -30,6 +30,13 @@ spec:
         - name: payment
           image: ghcr.io/nicolasdemol/payment:latest
           imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: belovr-common-config
+            - configMapRef:
+                name: payment-config
+            - secretRef:
+                name: payment-secrets
           ports:
             - name: http
               containerPort: 4400

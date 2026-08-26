@@ -30,6 +30,13 @@ spec:
         - name: image
           image: ghcr.io/nicolasdemol/image:latest
           imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: belovr-common-config
+            - configMapRef:
+                name: image-config
+            - secretRef:
+                name: image-secrets
           ports:
             - name: http
               containerPort: 4600

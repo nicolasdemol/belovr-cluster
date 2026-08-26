@@ -30,6 +30,11 @@ spec:
         - name: ai
           image: ghcr.io/nicolasdemol/ai:latest
           imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: ai-config
+            - secretRef:
+                name: ai-secrets
           ports:
             - name: http
               containerPort: 8888

@@ -30,6 +30,13 @@ spec:
         - name: video
           image: ghcr.io/nicolasdemol/video:latest
           imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: belovr-common-config
+            - configMapRef:
+                name: video-config
+            - secretRef:
+                name: video-secrets
           ports:
             - name: http
               containerPort: 4700

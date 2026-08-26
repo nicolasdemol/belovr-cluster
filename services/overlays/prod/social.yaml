@@ -30,6 +30,13 @@ spec:
         - name: social
           image: ghcr.io/nicolasdemol/social:latest
           imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: belovr-common-config
+            - configMapRef:
+                name: social-config
+            - secretRef:
+                name: social-secrets
           ports:
             - name: http
               containerPort: 4300

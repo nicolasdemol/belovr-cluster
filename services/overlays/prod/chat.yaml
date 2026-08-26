@@ -30,6 +30,13 @@ spec:
         - name: chat
           image: ghcr.io/nicolasdemol/chat:latest
           imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: belovr-common-config
+            - configMapRef:
+                name: chat-config
+            - secretRef:
+                name: chat-secrets
           ports:
             - name: http
               containerPort: 4200
