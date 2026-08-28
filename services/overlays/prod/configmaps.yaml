@@ -45,6 +45,7 @@ metadata:
     app.kubernetes.io/name: ai
     app.kubernetes.io/part-of: belovr
 data:
+  R2_ENDPOINT: https://e42b1dcd7b3bdabf10bb3c3afeb1828f.r2.cloudflarestorage.com
   R2_BUCKET: belovr-raw
   QDRANT_HOST: ai-db-qdrant.belovr.svc.cluster.local
   QDRANT_PORT: "6333"
@@ -96,6 +97,7 @@ data:
   CONTENT_DB_NAME: content
   CONTENT_DB_SYNC: "false"
   CONTENT_DB_LOGGING: "false"
+  R2_ENDPOINT: https://e42b1dcd7b3bdabf10bb3c3afeb1828f.r2.cloudflarestorage.com
   R2_RAW_BUCKET: belovr-raw
   R2_TRANSCODED_BUCKET: belovr-dash
   R2_IMAGE_BUCKET: belovr-image
@@ -115,6 +117,7 @@ metadata:
     app.kubernetes.io/part-of: belovr
 data:
   PORT: "4600"
+  R2_ENDPOINT: https://e42b1dcd7b3bdabf10bb3c3afeb1828f.r2.cloudflarestorage.com
   R2_RAW_BUCKET: belovr-raw
   R2_TRANSCODED_BUCKET: belovr-dash
   R2_IMAGE_BUCKET: belovr-image
@@ -176,6 +179,7 @@ data:
   CONTENT_DB_NAME: content
   CONTENT_DB_SYNC: "false"
   CONTENT_DB_LOGGING: "false"
+  R2_ENDPOINT: https://e42b1dcd7b3bdabf10bb3c3afeb1828f.r2.cloudflarestorage.com
   R2_RAW_BUCKET: belovr-raw
   R2_TRANSCODED_BUCKET: belovr-dash
   R2_IMAGE_BUCKET: belovr-image
@@ -202,6 +206,7 @@ data:
   APP_DB_NAME: user
   APP_DB_SYNC: "false"
   APP_DB_LOGGING: "false"
+  R2_ENDPOINT: https://e42b1dcd7b3bdabf10bb3c3afeb1828f.r2.cloudflarestorage.com
   R2_RAW_BUCKET: belovr-raw
   R2_TRANSCODED_BUCKET: belovr-dash
   R2_IMAGE_BUCKET: belovr-image
@@ -221,6 +226,7 @@ metadata:
     app.kubernetes.io/part-of: belovr
 data:
   PORT: "4700"
+  R2_ENDPOINT: https://e42b1dcd7b3bdabf10bb3c3afeb1828f.r2.cloudflarestorage.com
   R2_RAW_BUCKET: belovr-raw
   R2_TRANSCODED_BUCKET: belovr-dash
   R2_IMAGE_BUCKET: belovr-image
