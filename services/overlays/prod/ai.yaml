@@ -34,6 +34,8 @@ spec:
             - configMapRef:
                 name: ai-config
             - secretRef:
+                name: belovr-r2-secrets
+            - secretRef:
                 name: ai-secrets
           ports:
             - name: http

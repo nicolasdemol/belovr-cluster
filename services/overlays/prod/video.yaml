@@ -36,7 +36,11 @@ spec:
             - configMapRef:
                 name: video-config
             - secretRef:
-                name: video-secrets
+                name: belovr-auth-secrets
+            - secretRef:
+                name: belovr-rabbitmq-secrets
+            - secretRef:
+                name: belovr-r2-secrets
           ports:
             - name: http
               containerPort: 4700

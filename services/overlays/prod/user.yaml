@@ -36,7 +36,13 @@ spec:
             - configMapRef:
                 name: user-config
             - secretRef:
-                name: user-secrets
+                name: belovr-auth-secrets
+            - secretRef:
+                name: belovr-rabbitmq-secrets
+            - secretRef:
+                name: belovr-r2-secrets
+            - secretRef:
+                name: user-db-secrets
           ports:
             - name: http
               containerPort: 4000

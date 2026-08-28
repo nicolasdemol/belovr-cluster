@@ -36,7 +36,15 @@ spec:
             - configMapRef:
                 name: content-config
             - secretRef:
-                name: content-secrets
+                name: belovr-auth-secrets
+            - secretRef:
+                name: belovr-rabbitmq-secrets
+            - secretRef:
+                name: belovr-r2-secrets
+            - secretRef:
+                name: content-db-secrets
+            - secretRef:
+                name: content-cloudflare-secrets
           ports:
             - name: http
               containerPort: 4100

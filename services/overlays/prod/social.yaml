@@ -36,7 +36,13 @@ spec:
             - configMapRef:
                 name: social-config
             - secretRef:
-                name: social-secrets
+                name: belovr-auth-secrets
+            - secretRef:
+                name: belovr-rabbitmq-secrets
+            - secretRef:
+                name: belovr-r2-secrets
+            - secretRef:
+                name: content-db-secrets
           ports:
             - name: http
               containerPort: 4300

@@ -9,9 +9,9 @@ metadata:
     app.kubernetes.io/part-of: belovr
 data:
   NODE_ENV: production
-  CORS_ORIGIN: https://app.belovr.com,https://admin.belovr.com
+  CORS_ORIGIN: https://app.belovr.com
   AUTH_KEYCLOAK_ID: belovr-web
-  AUTH_KEYCLOAK_ISSUER: http://keycloak.belovr.svc.cluster.local:8080/realms/belovr
+  AUTH_KEYCLOAK_ISSUER: https://sso.belovr.com/realms/belovr
   REDIS_HOST: redis-master.belovr.svc.cluster.local
   REDIS_PORT: "6379"
   REDIS_URL: redis://redis-master.belovr.svc.cluster.local:6379

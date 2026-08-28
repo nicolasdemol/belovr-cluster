@@ -36,7 +36,11 @@ spec:
             - configMapRef:
                 name: auth-config
             - secretRef:
-                name: auth-secrets
+                name: belovr-auth-secrets
+            - secretRef:
+                name: auth-keycloak-secrets
+            - secretRef:
+                name: belovr-rabbitmq-secrets
           ports:
             - name: http
               containerPort: 3001

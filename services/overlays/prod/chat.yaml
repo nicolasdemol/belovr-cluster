@@ -36,7 +36,13 @@ spec:
             - configMapRef:
                 name: chat-config
             - secretRef:
-                name: chat-secrets
+                name: belovr-auth-secrets
+            - secretRef:
+                name: belovr-rabbitmq-secrets
+            - secretRef:
+                name: chat-db-secrets
+            - secretRef:
+                name: payment-shared-secrets
           ports:
             - name: http
               containerPort: 4200

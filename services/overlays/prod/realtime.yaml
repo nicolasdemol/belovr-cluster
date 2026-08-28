@@ -36,7 +36,9 @@ spec:
             - configMapRef:
                 name: realtime-config
             - secretRef:
-                name: realtime-secrets
+                name: belovr-auth-secrets
+            - secretRef:
+                name: belovr-rabbitmq-secrets
           ports:
             - name: http
               containerPort: 4500
