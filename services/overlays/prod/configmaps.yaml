@@ -97,6 +97,8 @@ data:
   CONTENT_DB_NAME: content
   CONTENT_DB_SYNC: "false"
   CONTENT_DB_LOGGING: "false"
+  CF_ACCOUNT_ID: e42b1dcd7b3bdabf10bb3c3afeb1828f
+  CF_NAMESPACE_ID: 93004e80b07a4464bb938699490f315d
   R2_ENDPOINT: https://e42b1dcd7b3bdabf10bb3c3afeb1828f.r2.cloudflarestorage.com
   R2_RAW_BUCKET: belovr-raw
   R2_TRANSCODED_BUCKET: belovr-dash
