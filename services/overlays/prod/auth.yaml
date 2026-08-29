@@ -38,7 +38,7 @@ spec:
             - secretRef:
                 name: belovr-auth-secrets
             - secretRef:
-                name: auth-keycloak-secrets
+                name: keycloak-auth-secrets
             - secretRef:
                 name: belovr-rabbitmq-secrets
           ports:
