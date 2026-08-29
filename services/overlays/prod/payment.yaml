@@ -45,6 +45,7 @@ spec:
                 name: payment-shared-secrets
             - secretRef:
                 name: payment-provider-secrets
+                optional: true
           ports:
             - name: http
               containerPort: 4400
