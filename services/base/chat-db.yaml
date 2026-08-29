@@ -16,9 +16,12 @@ spec:
       releaseName: chat-db
       valuesObject:
         auth:
+          enablePostgresUser: false
           username: chat
-          password: chatpass
           database: chat
+          existingSecret: chat-db-secrets
+          secretKeys:
+            userPasswordKey: CHAT_DB_PASSWORD
         primary:
           persistence:
             enabled: true

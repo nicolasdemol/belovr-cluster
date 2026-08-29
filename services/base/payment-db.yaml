@@ -16,9 +16,12 @@ spec:
       releaseName: payment-db
       valuesObject:
         auth:
+          enablePostgresUser: false
           username: payment
-          password: paymentpass
           database: payment
+          existingSecret: payment-db-secrets
+          secretKeys:
+            userPasswordKey: PAYMENT_DB_PASSWORD
         primary:
           persistence:
             enabled: true

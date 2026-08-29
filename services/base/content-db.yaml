@@ -16,9 +16,12 @@ spec:
       releaseName: content-db
       valuesObject:
         auth:
+          enablePostgresUser: false
           username: content
-          password: contentpass
           database: content
+          existingSecret: content-db-secrets
+          secretKeys:
+            userPasswordKey: CONTENT_DB_PASSWORD
         primary:
           persistence:
             enabled: true

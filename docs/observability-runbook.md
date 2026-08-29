@@ -26,7 +26,10 @@ kubectl -n observability get svc
 kubectl -n observability port-forward svc/kube-prometheus-stack-grafana 3000:80
 ```
 
-Grafana: `http://localhost:3000`, user `admin`, password `adminpass`.
+Grafana est accessible sur `http://localhost:3000`. Son credential
+d'administration est fourni par le Secret Kubernetes
+`grafana-admin-secrets` dans le namespace `observability`; aucune valeur ne
+doit etre stockee dans ce document.
 
 ## Dashboards
 

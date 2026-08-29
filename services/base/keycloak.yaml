@@ -39,7 +39,9 @@ spec:
             memory: 512Mi
         keycloak:
           adminUser: admin
-          adminPassword: adminpass
+          existingSecret: keycloak-admin-secrets
+          secretKeys:
+            adminPasswordKey: KEYCLOAK_ADMIN_PASSWORD
           hostname: sso.belovr.com
           httpEnabled: true
           production: true
@@ -51,7 +53,10 @@ spec:
           port: "5432"
           name: keycloak
           username: keycloak
-          password: keycloakpass
+          existingSecret: keycloak-db-secrets
+          secretKeys:
+            usernameKey: KEYCLOAK_DB_USERNAME
+            passwordKey: KEYCLOAK_DB_PASSWORD
         postgres:
           enabled: false
         ingress:

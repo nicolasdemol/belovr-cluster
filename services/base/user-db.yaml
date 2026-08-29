@@ -16,9 +16,12 @@ spec:
       releaseName: user-db
       valuesObject:
         auth:
+          enablePostgresUser: false
           username: user
-          password: userpass
           database: user
+          existingSecret: user-db-secrets
+          secretKeys:
+            userPasswordKey: APP_DB_PASSWORD
         primary:
           persistence:
             enabled: true

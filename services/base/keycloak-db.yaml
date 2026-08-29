@@ -16,9 +16,12 @@ spec:
       releaseName: keycloak-db
       valuesObject:
         auth:
+          enablePostgresUser: false
           username: keycloak
-          password: keycloakpass
           database: keycloak
+          existingSecret: keycloak-db-secrets
+          secretKeys:
+            userPasswordKey: KEYCLOAK_DB_PASSWORD
         primary:
           persistence:
             enabled: true

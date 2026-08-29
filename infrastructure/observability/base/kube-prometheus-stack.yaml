@@ -4,7 +4,7 @@ metadata:
   name: kube-prometheus-stack
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "15"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -21,8 +21,10 @@ spec:
           enabled: true
         grafana:
           enabled: true
-          adminUser: admin
-          adminPassword: adminpass
+          admin:
+            existingSecret: grafana-admin-secrets
+            userKey: GRAFANA_ADMIN_USER
+            passwordKey: GRAFANA_ADMIN_PASSWORD
           defaultDashboardsTimezone: Europe/Paris
           sidecar:
             skipTlsVerify: true

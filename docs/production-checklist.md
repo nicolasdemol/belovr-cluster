@@ -4,9 +4,10 @@ Ce repo est maintenant structure pour la prod, mais il reste quelques verrous av
 
 ## 1. Secrets
 
-- Sortir tous les mots de passe hardcodes des manifests Helm.
-- Brancher un mecanisme type External Secrets, SOPS ou Vault.
-- Remplacer les credentials admin par des secrets geres hors Git.
+- Generer les SealedSecrets propres a chaque environnement avant la
+  synchronisation des workloads qui les consomment.
+- Planifier la rotation des credentials historiques apres validation de la
+  migration vers les Secrets externes.
 
 ## 2. Images et versions
 
@@ -34,7 +35,8 @@ Ce repo est maintenant structure pour la prod, mais il reste quelques verrous av
 
 - Verifier la stack `kube-prometheus-stack`, `loki` et `otel-collector`.
 - Integrer le contrat applicatif de [nest-observability.md](nest-observability.md).
-- Remplacer le password Grafana hardcode par un secret gere hors Git.
+- Verifier que `grafana-admin-secrets` est provisionne dans le namespace
+  `observability` du cluster cible.
 - Valider les dashboards et alertes avec [observability-runbook.md](observability-runbook.md).
 
 ## 7. Exploitation

@@ -81,6 +81,56 @@ La configuration Traefik commune se trouve dans
 `infrastructure/traefik/base/values.yaml`. Les commandes d'installation et la
 gestion de l'IP sont documentées dans `infrastructure/traefik/prod/README.md`.
 
+## Secrets PostgreSQL applicatifs
+
+Les charts PostgreSQL applicatifs utilisent des Secrets Kubernetes externes.
+Chaque environnement doit provisionner ses propres Secrets, chiffrés avec le
+certificat Sealed Secrets du cluster concerné, avant la synchronisation des
+Applications PostgreSQL :
+
+| Application | Secret externe | Clé attendue |
+| --- | --- | --- |
+| `chat-db` | `chat-db-secrets` | `CHAT_DB_PASSWORD` |
+| `content-db` | `content-db-secrets` | `CONTENT_DB_PASSWORD` |
+| `payment-db` | `payment-db-secrets` | `PAYMENT_DB_PASSWORD` |
+| `user-db` | `user-db-secrets` | `APP_DB_PASSWORD` |
+
+Les SealedSecrets de production restent dans
+`services/overlays/prod/secrets/`. Ceux de développement doivent être générés
+séparément avec le certificat du cluster dev et ne doivent jamais réutiliser
+le ciphertext de prod. Les fichiers DB générés doivent être ajoutés au
+`kustomization.yaml` de l'overlay correspondant. En prod, cet overlay applique
+la sync-wave `10`, avant les Applications PostgreSQL en wave `20` et les
+workloads applicatifs en wave `40`.
+
+Lors d'une migration avec des PVC existants, le Secret externe doit contenir
+le mot de passe déjà enregistré dans PostgreSQL. Changer uniquement le Secret
+ne réalise pas une rotation du mot de passe dans la base.
+
+Les autres composants partagés utilisent également des Secrets externes
+propres à chaque environnement :
+
+| Composant | Namespace | Secret externe | Clés attendues |
+| --- | --- | --- | --- |
+| PostgreSQL Keycloak et Keycloak | `belovr` | `keycloak-db-secrets` | `KEYCLOAK_DB_USERNAME`, `KEYCLOAK_DB_PASSWORD` |
+| Administration Keycloak | `belovr` | `keycloak-admin-secrets` | `KEYCLOAK_ADMIN_PASSWORD` |
+| RabbitMQ | `belovr` | `rabbitmq-infra-secrets` | `RABBITMQ_PASSWORD`, `RABBITMQ_ERLANG_COOKIE` |
+| Grafana | `observability` | `grafana-admin-secrets` | `GRAFANA_ADMIN_USER`, `GRAFANA_ADMIN_PASSWORD` |
+
+Le Secret applicatif `belovr-rabbitmq-secrets`, qui expose actuellement une
+`AMQP_URL` complète aux microservices, reste distinct du Secret infrastructure
+de RabbitMQ. Cette duplication chiffrée ne pourra être supprimée qu'après une
+évolution des applications permettant de construire l'URL depuis des champs
+séparés ou l'adoption d'un contrôleur capable de dériver plusieurs Secrets
+depuis une source de credential unique.
+
+En production, les SealedSecrets correspondants doivent rester dans
+`services/overlays/prod/secrets/` et sont appliqués en wave `10`. La stack
+d'observabilité est créée en wave `15`, les bases et RabbitMQ en wave `20`,
+Keycloak en wave `30`, puis les microservices en wave `40`. Les clusters dev
+doivent provisionner leurs propres versions de ces Secrets avec leur propre
+certificat Sealed Secrets.
+
 ## Conventions mises en place
 
 - `sync-wave` explicites pour ordonner le bootstrap.
