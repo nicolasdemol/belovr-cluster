@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chat-config
+  namespace: belovr
+  annotations:
+    argocd.argoproj.io/sync-wave: "35"
+  labels:
+    app.kubernetes.io/name: chat
+    app.kubernetes.io/part-of: belovr
+    belovr.io/environment: prod
+data:
+  PORT: "4200"
+  CHAT_DB_TYPE: postgres
+  CHAT_DB_HOST: chat-db-postgresql.belovr.svc.cluster.local
+  CHAT_DB_PORT: "5432"
+  CHAT_DB_USER: chat
+  CHAT_DB_NAME: chat
+  CHAT_DB_SYNC: "false"
+  CHAT_DB_LOGGING: "false"
+  NEXTAUTH_URL: https://app.belovr.com
+  LOG_SERVICE_NAME: chat

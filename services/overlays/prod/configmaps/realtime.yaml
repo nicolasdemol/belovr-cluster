@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: realtime-config
+  namespace: belovr
+  annotations:
+    argocd.argoproj.io/sync-wave: "35"
+  labels:
+    app.kubernetes.io/name: realtime
+    app.kubernetes.io/part-of: belovr
+    belovr.io/environment: prod
+data:
+  PORT: "4500"
+  LOG_SERVICE_NAME: realtime

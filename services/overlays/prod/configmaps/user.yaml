@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-config
+  namespace: belovr
+  annotations:
+    argocd.argoproj.io/sync-wave: "35"
+  labels:
+    app.kubernetes.io/name: user
+    app.kubernetes.io/part-of: belovr
+    belovr.io/environment: prod
+data:
+  PORT: "4000"
+  APP_DB_TYPE: postgres
+  APP_DB_HOST: user-db-postgresql.belovr.svc.cluster.local
+  APP_DB_PORT: "5432"
+  APP_DB_USER: user
+  APP_DB_NAME: user
+  APP_DB_SYNC: "false"
+  APP_DB_LOGGING: "false"
+  R2_ENDPOINT: https://e42b1dcd7b3bdabf10bb3c3afeb1828f.r2.cloudflarestorage.com
+  R2_RAW_BUCKET: belovr-raw
+  R2_TRANSCODED_BUCKET: belovr-dash
+  R2_IMAGE_BUCKET: belovr-image
+  R2_PUBLIC_TRANSCODED: https://media.belovr.com
+  R2_PUBLIC_IMAGES: https://images.belovr.com
+  LOG_SERVICE_NAME: user

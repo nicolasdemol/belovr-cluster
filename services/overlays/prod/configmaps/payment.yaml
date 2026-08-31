@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-config
+  namespace: belovr
+  annotations:
+    argocd.argoproj.io/sync-wave: "35"
+  labels:
+    app.kubernetes.io/name: payment
+    app.kubernetes.io/part-of: belovr
+    belovr.io/environment: prod
+data:
+  PORT: "4400"
+  PAYMENT_DB_TYPE: postgres
+  PAYMENT_DB_HOST: payment-db-postgresql.belovr.svc.cluster.local
+  PAYMENT_DB_PORT: "5432"
+  PAYMENT_DB_USER: payment
+  PAYMENT_DB_NAME: payment
+  PAYMENT_DB_SYNC: "false"
+  PAYMENT_DB_LOGGING: "false"
+  LOG_SERVICE_NAME: payment

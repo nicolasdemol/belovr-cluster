@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: belovr-services
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: belovr-platform
+    belovr.io/environment: prod
+    belovr.io/tier: services
+spec:
+  description: Production Belovr microservices managed through the services ApplicationSet.
+  sourceRepos:
+    - https://github.com/nicolasdemol/belovr-cluster.git
+  destinations:
+    - namespace: belovr
+      server: https://kubernetes.default.svc
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

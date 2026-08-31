@@ -1,10 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: argocd
+resources:
+  - ../../../services/base/identity
 labels:
   - pairs:
       app.kubernetes.io/managed-by: argocd
       app.kubernetes.io/part-of: belovr-platform
-resources:
-  - data
-  - identity
+      belovr.io/environment: prod
+      belovr.io/tier: identity

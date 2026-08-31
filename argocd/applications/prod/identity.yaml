@@ -1,21 +1,22 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
-# Existing clusters must follow docs/app-of-apps-migration.md before applying
-# this final manifest with pruning enabled.
 metadata:
-  name: belovr-root-prod
+  name: belovr-prod-identity
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "20"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
   labels:
     app.kubernetes.io/part-of: belovr-platform
     belovr.io/environment: prod
+    belovr.io/tier: identity
 spec:
-  project: default
+  project: belovr-platform
   source:
     repoURL: https://github.com/nicolasdemol/belovr-cluster.git
     targetRevision: main
-    path: argocd/applications/prod
+    path: environments/prod/identity
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd

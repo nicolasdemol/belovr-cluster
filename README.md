@@ -9,6 +9,7 @@ quelques différences explicites.
 ```text
 argocd/
   bootstrap/        # Root applications a appliquer une seule fois
+  applications/     # Catalogue app-of-apps de production
   project/          # AppProject Argo CD
 environments/
   base/             # Composition Kubernetes commune
@@ -35,6 +36,8 @@ docs/
 - Les `Application` Argo CD vivent dans `services/`.
 - Le socle cluster et reseau vit dans `infrastructure/`.
 - Les points d'entree de bootstrap vivent dans `argocd/bootstrap/`.
+- Le root `prod` ne rend que les six Applications de domaine définies dans
+  `argocd/applications/prod/`.
 - `environments/base` assemble le socle identique aux deux environnements.
 - Les overlays `dev` et `prod` ne portent que leurs différences réelles.
 - Traefik termine le TLS public et route en HTTP vers les Services internes.
@@ -53,6 +56,11 @@ kubectl apply -f argocd/bootstrap/root-prod.yaml
 Les root apps pointent vers ce repo GitHub :
 
 - `https://github.com/nicolasdemol/belovr-cluster.git`
+
+Un cluster `prod` existant doit suivre la procédure de migration sans pruning
+avant d'appliquer le nouveau root :
+
+- [docs/app-of-apps-migration.md](docs/app-of-apps-migration.md)
 
 ## Socle commun
 

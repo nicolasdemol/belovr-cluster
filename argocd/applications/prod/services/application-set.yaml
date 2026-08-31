@@ -1,0 +1,66 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: belovr-prod-microservices
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "36"
+  labels:
+    app.kubernetes.io/part-of: belovr-platform
+    belovr.io/environment: prod
+    belovr.io/tier: services
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - list:
+        elements:
+          - service: ai
+          - service: auth
+          - service: chat
+          - service: content
+          - service: image
+          - service: payment
+          - service: realtime
+          - service: social
+          - service: user
+          - service: video
+  template:
+    metadata:
+      name: "belovr-prod-{{ .service }}"
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: "40"
+      labels:
+        app.kubernetes.io/part-of: belovr
+        belovr.io/environment: prod
+        belovr.io/tier: services
+        belovr.io/service: "{{ .service }}"
+    spec:
+      project: belovr-services
+      sources:
+        - repoURL: https://github.com/nicolasdemol/belovr-cluster.git
+          targetRevision: main
+          path: services/overlays/prod
+          directory:
+            include: "{{ .service }}.yaml"
+        - repoURL: https://github.com/nicolasdemol/belovr-cluster.git
+          targetRevision: main
+          path: services/overlays/prod/configmaps
+          directory:
+            include: "{{ .service }}.yaml"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: belovr
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+          - PruneLast=true
+  syncPolicy:
+    applicationsSync: create-update
+    preserveResourcesOnDeletion: true

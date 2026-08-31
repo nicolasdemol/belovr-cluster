@@ -10,6 +10,7 @@ metadata:
     app.kubernetes.io/instance: payment
     app.kubernetes.io/component: microservice
     app.kubernetes.io/part-of: belovr
+    belovr.io/environment: prod
 spec:
   replicas: 1
   selector:

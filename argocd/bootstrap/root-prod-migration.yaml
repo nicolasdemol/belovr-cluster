@@ -1,7 +1,5 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
-# Existing clusters must follow docs/app-of-apps-migration.md before applying
-# this final manifest with pruning enabled.
 metadata:
   name: belovr-root-prod
   namespace: argocd
@@ -21,7 +19,7 @@ spec:
     namespace: argocd
   syncPolicy:
     automated:
-      prune: true
+      prune: false
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
