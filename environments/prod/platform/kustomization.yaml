@@ -9,6 +9,12 @@ resources:
   - ../../../infrastructure/network/dev
   - ../../../infrastructure/argocd/dev
 patches:
+  - path: public-ingress-backends-patch.yaml
+    target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: belovr-main-ingress
   - target:
       group: argoproj.io
       version: v1alpha1

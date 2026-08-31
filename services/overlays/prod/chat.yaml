@@ -48,3 +48,27 @@ spec:
             - name: http
               containerPort: 4200
               protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat
+  namespace: belovr
+  annotations:
+    argocd.argoproj.io/sync-wave: "40"
+  labels:
+    app.kubernetes.io/name: chat
+    app.kubernetes.io/instance: chat
+    app.kubernetes.io/component: microservice
+    app.kubernetes.io/part-of: belovr
+    belovr.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: chat
+    app.kubernetes.io/instance: chat
+  ports:
+    - name: http
+      port: 4200
+      targetPort: http
+      protocol: TCP

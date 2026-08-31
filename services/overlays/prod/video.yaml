@@ -46,3 +46,27 @@ spec:
             - name: http
               containerPort: 4700
               protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: video
+  namespace: belovr
+  annotations:
+    argocd.argoproj.io/sync-wave: "40"
+  labels:
+    app.kubernetes.io/name: video
+    app.kubernetes.io/instance: video
+    app.kubernetes.io/component: microservice
+    app.kubernetes.io/part-of: belovr
+    belovr.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: video
+    app.kubernetes.io/instance: video
+  ports:
+    - name: http
+      port: 4700
+      targetPort: http
+      protocol: TCP

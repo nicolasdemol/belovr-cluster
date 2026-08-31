@@ -48,3 +48,27 @@ spec:
             - name: http
               containerPort: 4300
               protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: social
+  namespace: belovr
+  annotations:
+    argocd.argoproj.io/sync-wave: "40"
+  labels:
+    app.kubernetes.io/name: social
+    app.kubernetes.io/instance: social
+    app.kubernetes.io/component: microservice
+    app.kubernetes.io/part-of: belovr
+    belovr.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: social
+    app.kubernetes.io/instance: social
+  ports:
+    - name: http
+      port: 4300
+      targetPort: http
+      protocol: TCP

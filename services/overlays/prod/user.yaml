@@ -48,3 +48,27 @@ spec:
             - name: http
               containerPort: 4000
               protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user
+  namespace: belovr
+  annotations:
+    argocd.argoproj.io/sync-wave: "40"
+  labels:
+    app.kubernetes.io/name: user
+    app.kubernetes.io/instance: user
+    app.kubernetes.io/component: microservice
+    app.kubernetes.io/part-of: belovr
+    belovr.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: user
+    app.kubernetes.io/instance: user
+  ports:
+    - name: http
+      port: 4000
+      targetPort: http
+      protocol: TCP

@@ -1,0 +1,48 @@
+- op: replace
+  path: /spec/rules/3/http/paths/0/backend/service
+  value:
+    name: auth
+    port:
+      number: 3001
+- op: replace
+  path: /spec/rules/4/http/paths/0/backend/service
+  value:
+    name: user
+    port:
+      number: 4000
+- op: replace
+  path: /spec/rules/5/http/paths/0/backend/service
+  value:
+    name: content
+    port:
+      number: 4100
+- op: replace
+  path: /spec/rules/6/http/paths/0/backend/service
+  value:
+    name: chat
+    port:
+      number: 4200
+- op: replace
+  path: /spec/rules/7/http/paths/0/backend/service
+  value:
+    name: social
+    port:
+      number: 4300
+- op: replace
+  path: /spec/rules/8/http/paths/0/backend/service
+  value:
+    name: payment
+    port:
+      number: 4400
+- op: replace
+  path: /spec/rules/9/http/paths/0/backend/service
+  value:
+    name: realtime
+    port:
+      number: 4500
+- op: replace
+  path: /spec/rules/10/http/paths/0/backend/service
+  value:
+    name: ai
+    port:
+      number: 8888

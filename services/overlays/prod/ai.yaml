@@ -42,3 +42,27 @@ spec:
             - name: http
               containerPort: 8888
               protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai
+  namespace: belovr
+  annotations:
+    argocd.argoproj.io/sync-wave: "40"
+  labels:
+    app.kubernetes.io/name: ai
+    app.kubernetes.io/instance: ai
+    app.kubernetes.io/component: microservice
+    app.kubernetes.io/part-of: belovr
+    belovr.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: ai
+    app.kubernetes.io/instance: ai
+  ports:
+    - name: http
+      port: 8888
+      targetPort: http
+      protocol: TCP

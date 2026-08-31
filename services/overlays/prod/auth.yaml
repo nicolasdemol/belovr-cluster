@@ -46,3 +46,27 @@ spec:
             - name: http
               containerPort: 3001
               protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth
+  namespace: belovr
+  annotations:
+    argocd.argoproj.io/sync-wave: "40"
+  labels:
+    app.kubernetes.io/name: auth
+    app.kubernetes.io/instance: auth
+    app.kubernetes.io/component: microservice
+    app.kubernetes.io/part-of: belovr
+    belovr.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: auth
+    app.kubernetes.io/instance: auth
+  ports:
+    - name: http
+      port: 3001
+      targetPort: http
+      protocol: TCP
