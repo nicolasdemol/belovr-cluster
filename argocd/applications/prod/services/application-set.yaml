@@ -26,6 +26,7 @@ spec:
           - service: social
           - service: user
           - service: video
+          - service: web
   template:
     metadata:
       name: "belovr-prod-{{ .service }}"

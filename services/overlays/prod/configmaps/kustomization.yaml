@@ -12,3 +12,4 @@ resources:
   - social.yaml
   - user.yaml
   - video.yaml
+  - web.yaml

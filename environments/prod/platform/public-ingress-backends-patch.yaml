@@ -1,4 +1,10 @@
 - op: replace
+  path: /spec/rules/0/http/paths/0/backend/service
+  value:
+    name: web
+    port:
+      number: 3000
+- op: replace
   path: /spec/rules/3/http/paths/0/backend/service
   value:
     name: auth

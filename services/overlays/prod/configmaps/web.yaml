@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-config
+  namespace: belovr
+  annotations:
+    argocd.argoproj.io/sync-wave: "35"
+  labels:
+    app.kubernetes.io/name: web
+    app.kubernetes.io/part-of: belovr
+    belovr.io/environment: prod
+data:
+  PORT: "3000"
+  HOSTNAME: 0.0.0.0
+  AUTH_URL: https://app.belovr.com
+  AUTH_SERVICE_URL: http://auth.belovr.svc.cluster.local:3001
+  AUTH_SERVICE_TIMEOUT_MS: "9000"
+  NEXT_PUBLIC_API_URL: https://content.belovr.com
+  NEXT_PUBLIC_AUTH_URL: https://auth.belovr.com
+  NEXT_PUBLIC_USER_URL: https://user.belovr.com
+  NEXT_PUBLIC_CONTENT_URL: https://content.belovr.com
+  NEXT_PUBLIC_CHAT_URL: https://chat.belovr.com
+  NEXT_PUBLIC_SOCIAL_URL: https://social.belovr.com
+  NEXT_PUBLIC_PAYMENT_URL: https://payment.belovr.com
+  NEXT_PUBLIC_REALTIME_URL: https://realtime.belovr.com
+  NEXT_PUBLIC_IA_URL: https://ia.belovr.com
