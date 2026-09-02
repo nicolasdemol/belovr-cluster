@@ -8,8 +8,15 @@ resources:
   - ../../../infrastructure/dev
   - ../../../infrastructure/network/dev
   - ../../../infrastructure/argocd/dev
+  - web-ingress.yaml
 patches:
   - path: public-ingress-backends-patch.yaml
+    target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: belovr-main-ingress
+  - path: web-ingress-detach-patch.yaml
     target:
       group: networking.k8s.io
       version: v1

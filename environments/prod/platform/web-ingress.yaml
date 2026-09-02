@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: belovr-web-ingress
+  namespace: belovr
+  annotations:
+    argocd.argoproj.io/sync-wave: "40"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.middlewares: belovr-belovr-cors@kubernetescrd
+  labels:
+    app.kubernetes.io/name: web
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: belovr-platform
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - app.belovr.com
+      secretName: belovr-app-tls-secret
+  rules:
+    - host: app.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 3000
