@@ -29,7 +29,7 @@ spec:
         - name: ghcr-pull
       containers:
         - name: auth
-          image: ghcr.io/nicolasdemol/auth:latest
+          image: ghcr.io/nicolasdemol/auth:c1dda91f1ee168c4e31544fc0d64bb95139f1a1b
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
