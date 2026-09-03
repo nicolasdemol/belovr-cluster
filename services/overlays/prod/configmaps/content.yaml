@@ -27,4 +27,5 @@ data:
   R2_PUBLIC_TRANSCODED: https://media.belovr.com
   R2_PUBLIC_IMAGES: https://images.belovr.com
   CF_WORKER_STREAM_URL_BASE: https://media.belovr.com/manifests/
+  CF_WORKER_IMAGE_URL_BASE: https://images.belovr.com/protected/
   LOG_SERVICE_NAME: content
