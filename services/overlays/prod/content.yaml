@@ -19,6 +19,8 @@ spec:
       app.kubernetes.io/instance: content
   template:
     metadata:
+      annotations:
+        belovr.io/config-revision: "2026-09-04-stream-worker-base-url"
       labels:
         app.kubernetes.io/name: content
         app.kubernetes.io/instance: content
