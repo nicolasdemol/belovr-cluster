@@ -3,6 +3,29 @@ kind: Kustomization
 resources:
   - ../base
   - ../../services/overlays/dev
+patches:
+  - target:
+      group: cert-manager.io
+      version: v1
+      kind: Certificate
+      name: belovr-wildcard-tls
+      namespace: belovr
+    patch: |-
+      - op: replace
+        path: /spec/dnsNames
+        value:
+          - "*.belovr.com"
+  - target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: belovr-main-ingress
+      namespace: belovr
+    patch: |-
+      - op: replace
+        path: /spec/tls/0/hosts
+        value:
+          - "*.belovr.com"
 labels:
   - pairs:
       belovr.io/environment: dev
