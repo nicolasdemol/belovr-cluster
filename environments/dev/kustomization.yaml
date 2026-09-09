@@ -26,6 +26,9 @@ patches:
         path: /spec/tls/0/hosts
         value:
           - "*.belovr.com"
+      - op: replace
+        path: /metadata/annotations/traefik.ingress.kubernetes.io~1router.middlewares
+        value: belovr-belovr-cors@kubernetescrd
 labels:
   - pairs:
       belovr.io/environment: dev
