@@ -16,9 +16,20 @@ spec:
   tls:
     - hosts:
         - app.belovr.com
+        - share.belovr.com
       secretName: belovr-app-tls-secret
   rules:
     - host: app.belovr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 3000
+    - host: share.belovr.com
       http:
         paths:
           - path: /

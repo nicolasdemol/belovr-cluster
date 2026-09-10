@@ -10,7 +10,7 @@ metadata:
     belovr.io/environment: prod
 data:
   NODE_ENV: production
-  CORS_ORIGIN: https://app.belovr.com
+  CORS_ORIGIN: https://app.belovr.com,https://share.belovr.com
   AUTH_KEYCLOAK_ID: belovr-web
   AUTH_KEYCLOAK_ISSUER: https://sso.belovr.com/realms/belovr
   REDIS_HOST: redis-master.belovr.svc.cluster.local

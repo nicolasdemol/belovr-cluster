@@ -29,6 +29,7 @@ spec:
       - OPTIONS
     accessControlAllowOriginList:
       - https://app.belovr.com
+      - https://share.belovr.com
     accessControlMaxAge: 1728000
     addVaryHeader: true
 ---

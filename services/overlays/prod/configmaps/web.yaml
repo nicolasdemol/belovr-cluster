@@ -15,6 +15,7 @@ data:
   AUTH_URL: https://app.belovr.com
   AUTH_SERVICE_URL: http://auth.belovr.svc.cluster.local:3001
   AUTH_SERVICE_TIMEOUT_MS: "9000"
+  NEXT_PUBLIC_SHARE_URL: https://share.belovr.com
   NEXT_PUBLIC_API_URL: https://content.belovr.com
   NEXT_PUBLIC_AUTH_URL: https://auth.belovr.com
   NEXT_PUBLIC_USER_URL: https://user.belovr.com
