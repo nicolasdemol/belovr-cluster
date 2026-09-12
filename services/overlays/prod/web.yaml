@@ -33,7 +33,7 @@ spec:
         runAsGroup: 1000
       containers:
         - name: web
-          image: ghcr.io/nicolasdemol/web:793d0b8f9968b2ef57556b065b8c4b6e3bf2bb2c
+          image: ghcr.io/nicolasdemol/web:ca9c8a1add4b296114b110ad3c16790d852cc2bd
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
