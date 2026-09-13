@@ -31,7 +31,7 @@ spec:
         - name: ghcr-pull
       containers:
         - name: content
-          image: ghcr.io/nicolasdemol/content:793d0b8f9968b2ef57556b065b8c4b6e3bf2bb2c
+          image: ghcr.io/nicolasdemol/content:f2137c3694581800d729b971808fd6fd4c3c58b5
           imagePullPolicy: Always
           envFrom:
             - configMapRef:

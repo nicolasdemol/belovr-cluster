@@ -29,7 +29,7 @@ spec:
         - name: ghcr-pull
       containers:
         - name: realtime
-          image: ghcr.io/nicolasdemol/realtime:latest
+          image: ghcr.io/nicolasdemol/realtime:f2137c3694581800d729b971808fd6fd4c3c58b5
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
