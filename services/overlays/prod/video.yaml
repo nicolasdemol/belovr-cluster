@@ -29,7 +29,7 @@ spec:
         - name: ghcr-pull
       containers:
         - name: video
-          image: ghcr.io/nicolasdemol/video:f2137c3694581800d729b971808fd6fd4c3c58b5
+          image: ghcr.io/nicolasdemol/video:53746f2c43c77b6097dcd83949e85e337a0229fd
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
