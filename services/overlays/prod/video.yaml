@@ -42,10 +42,31 @@ spec:
                 name: belovr-rabbitmq-secrets
             - secretRef:
                 name: belovr-r2-secrets
+            - secretRef:
+                name: belovr-video-runpod-secrets
           ports:
             - name: http
               containerPort: 4700
               protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 1Gi
 ---
 apiVersion: v1
 kind: Service

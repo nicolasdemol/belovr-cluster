@@ -9,6 +9,7 @@ resources:
   - ../../../infrastructure/network/dev
   - ../../../infrastructure/argocd/dev
   - web-ingress.yaml
+  - video-ingress.yaml
 patches:
   - path: public-ingress-backends-patch.yaml
     target:
