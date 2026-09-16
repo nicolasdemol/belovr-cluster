@@ -8,6 +8,17 @@ token on every callback.
 
 ## Prerequisites
 
+Published release verified on 2026-09-16:
+
+- Application images (except `ai`): `87954164fb5e9e3eb41a1ac88b33b690ff6cdef4`.
+- Runpod worker: `ghcr.io/nicolasdemol/belovr-video-transcoder:87954164fb5e9e3eb41a1ac88b33b690ff6cdef4`.
+- [Service publication](https://github.com/nicolasdemol/belovr/actions/runs/35132280348)
+  and [worker publication](https://github.com/nicolasdemol/belovr/actions/runs/35133181982)
+  both completed successfully, including their image push steps.
+
+Updating this repository does not change the Runpod endpoint's image. Select
+the worker reference above in Runpod when activating this release.
+
 - Use the production cluster/context. Do not replace `belovr-root-dev` just to
   expose video; that would switch all application routes.
 - Publish the new `video`, `content`, `image`, `web` and Runpod worker images.
